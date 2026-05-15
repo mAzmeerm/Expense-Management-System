@@ -4,7 +4,7 @@
     <title>Login Page</title>
 </head>
 <body>
-    <div class=" "login-wrapper"></div>
+    <div class= "login-wrapper">
     <div class="login-brand"><h1>AdadasSport Enterprise</h1><p>Manage expenses, budgets, employees and approvals securely.</p></div>
     <div class="login-panel"><div class="card login-card">
     <h1>Welcome Back!</h1>
