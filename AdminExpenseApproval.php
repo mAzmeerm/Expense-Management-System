@@ -13,9 +13,9 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-$sql2="select * from expenseclaim";
-	$query = mysqli_query($dbconn, $sql2) or die ("Error: " . mysqli_error());
-	$row = mysqli_num_rows($query);
+$sql2 = "select * from expenseclaim";
+$query = mysqli_query($dbconn, $sql2) or die("Error: " . mysqli_error());
+$row = mysqli_num_rows($query);
 
 // 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
@@ -25,8 +25,7 @@ $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName
               FROM expenseclaim c 
               JOIN employee e ON c.EmployeeID = e.EmployeeID 
               JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
-              WHERE c.Status = 'Pending' 
-              AND (e.Name LIKE '%$search%' 
+              WHERE (e.Name LIKE '%$search%' 
                    OR cat.CategoryName LIKE '%$search%' 
                    OR c.Status LIKE '%$search%') 
               ORDER BY c.ClaimDate DESC";
@@ -85,16 +84,18 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                                     <td><?= money($claim['Amount']) ?></td>
                                     <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
                                     <td>
-                                        <span class="badge badge-pending">
+                                        <span class="badge badge-<?= strtolower($claim['Status']) ?>">
                                             <?= htmlspecialchars($claim['Status']) ?>
                                         </span>
                                     </td>
                                     <td>
+                                        <?php if ($claim['Status'] === 'Pending') { ?>
                                         <form method="post" action="approvalProcess.php" style="display:inline">
                                             <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
                                             <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
                                             <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
                                         </form>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php
