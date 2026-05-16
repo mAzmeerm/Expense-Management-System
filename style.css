@@ -11,6 +11,7 @@
   --yellow: #d97706;
 }
 /*global styles */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -331,4 +332,32 @@ th {
 
 .close-btn:hover {
   opacity: 1;
+}
+
+/* Responsive styles */
+@media (max-width: 850px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+  .layout {
+    display: block;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .grid-2,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .login-wrapper {
+    display: block;
+  }
+  .login-brand {
+    padding: 2rem;
+  }
+  .searchbar {
+    display: block;
+  }
 }

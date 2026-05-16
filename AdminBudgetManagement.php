@@ -43,9 +43,9 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         include 'AdminSidebar.php';
         ?>
 
- <div class="main-content">
-            
-         <div class="container">
+        <div class="main-content">
+
+            <div class="container">
                 <div class="card">
 
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -90,10 +90,10 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                             <td><?= money($budget['RemainAmount']) ?></td>
                                             <td><?= htmlspecialchars($budget['Description']) ?></td>
                                         </tr>
-                                <?php
+                                    <?php
                                     }
                                 } else {
-                                ?>
+                                    ?>
                                     <tr>
                                         <td colspan="6" style="text-align:center;">No budget found.</td>
                                     </tr>
