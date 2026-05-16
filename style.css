@@ -109,6 +109,7 @@ textarea {
   width: 100%;
   max-width: 430px;
 }
+
 /*sidebar styles */
 .sidebar {
   width: 245px;
@@ -146,4 +147,121 @@ textarea {
   flex: 1;
   padding: 1.6rem;
 }
+
 /* Admin Dashboard Styles */
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+.card h3 {
+  margin-bottom: 0.8rem;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--color-primary);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 7px rgba(15, 23, 42, 0.05);
+}
+.stat-card h4 {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+.stat-card h3 {
+  font-size: 1.55rem;
+  margin: 0;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.chart-bars {
+  display: flex;
+  height: 230px;
+  gap: 1rem;
+  align-items: end;
+  border-left: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1rem 0;
+}
+.chart-bar {
+  flex: 1;
+  min-height: 8px;
+  background: #93c5fd;
+  border-radius: 0.45rem 0.45rem 0 0;
+  position: relative;
+}
+.chart-bar span {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #374151;
+  margin-bottom: 0.3rem;
+}
+.chart-labels {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem 0 2rem;
+}
+.chart-labels div {
+  flex: 1;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+th,
+td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+th {
+  background: #edf4fb;
+  color: #374151;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+/* Status badge styles */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+.badge-approved {
+  background: #dcfce7;
+  color: #166534;
+}
+.badge-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
