@@ -19,11 +19,14 @@ session_start(); ?>
                 <p style="color:#64748b;margin:8px 0 20px;">Sign in to continue</p>
                 <form action="loginprocess.php" method="post">
                     <?php if (isset($_SESSION['login_error'])): ?>
-                        <div class="alert alert-danger">
-                            <?php echo $_SESSION['login_error']; ?>
+                        <div class="alert alert-danger" id="loginAlert">
+                            <span><?php echo $_SESSION['login_error']; ?></span>
+
+                            <button type="button" class="close-btn" onclick="document.getElementById('loginAlert').style.display='none';">❌</button>
                         </div>
                         <?php unset($_SESSION['login_error']); ?>
                     <?php endif; ?>
+
                     <label for="Login">Login as:</label> <br>
                     <div style="display: flex; gap: 1.5rem; margin-top: .5rem; align-items: center;">
                         <label style="margin: 0; font-weight: normal; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">

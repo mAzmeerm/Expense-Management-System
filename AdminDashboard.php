@@ -22,7 +22,8 @@ $max = 1;
 $chart_rows = [];
 while ($r = mysqli_fetch_assoc($chart)) {
     $chart_rows[] = $r;
-    if ($r['total'] > $max) $max = $r['total'];
+    if ($r['total'] > $max) 
+        $max = $r['total'];
 }
 $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expenseclaim c JOIN employee e ON c.EmployeeID=e.EmployeeID JOIN expensecategory cat ON c.CategoryID=cat.CategoryID ORDER BY c.ClaimDate DESC LIMIT 5");
 ?>

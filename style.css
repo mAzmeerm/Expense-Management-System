@@ -93,7 +93,6 @@ textarea {
   color: #fff;
 }
 
-
 /* Login Page Styles */
 .login-wrapper {
   display: flex;
@@ -202,6 +201,8 @@ textarea {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
+/*Bar chart styles */
 .chart-bars {
   display: flex;
   height: 230px;
@@ -260,7 +261,6 @@ th {
   text-transform: uppercase;
 }
 
-
 /* Status badge styles */
 .badge {
   display: inline-block;
@@ -280,4 +280,36 @@ th {
 .badge-rejected {
   background: #fee2e2;
   color: #991b1b;
+}
+
+/* Stylish close button styling */
+.alert.alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 0.8rem 1rem;
+    border-radius: 0.55rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between; /* Pushes the message to left, X button to right */
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #991b1b;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 0 0 10px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+/* Subtle hover interaction */
+.close-btn:hover {
+    opacity: 1;
 }
