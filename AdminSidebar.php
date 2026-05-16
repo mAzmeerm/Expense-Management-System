@@ -1,7 +1,7 @@
 <div class="sidebar">
     <div class="sidebar-header">AdadasSport Enterprise</div>
     <nav>
-        <a class="active" href="admin_dashboard.php">Dashboard</a> 
+        <a class="active" href="AdminDashboard.php">Dashboard</a> 
         <a class="" href="admin_expense_approval.php">Expense Approval</a>
         <a class="" href="admin_budget.php">Budget Management</a>
         <a class="" href="admin_employee.php">Employee Directory</a>
