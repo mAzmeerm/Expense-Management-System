@@ -76,7 +76,10 @@ textarea {
   color: #991b1b;
   border: 1px solid #fecaca;
 }
-
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 /*button styles */
 .btn {
   display: inline-block;
@@ -284,32 +287,32 @@ th {
 
 /* Stylish close button styling */
 .alert.alert-danger {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-    padding: 0.8rem 1rem;
-    border-radius: 0.55rem;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: space-between; /* Pushes the message to left, X button to right */
-    align-items: center;
-    font-size: 0.9rem;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 0.8rem 1rem;
+  border-radius: 0.55rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between; /* Pushes the message to left, X button to right */
+  align-items: center;
+  font-size: 0.9rem;
 }
 
 .close-btn {
-    background: none;
-    border: none;
-    color: #991b1b;
-    font-size: 1.3rem;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0 0 0 10px;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+  background: none;
+  border: none;
+  color: #991b1b;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0 0 10px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
 }
 
 /* Subtle hover interaction */
 .close-btn:hover {
-    opacity: 1;
+  opacity: 1;
 }

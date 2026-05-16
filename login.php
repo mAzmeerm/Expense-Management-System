@@ -22,7 +22,7 @@ session_start(); ?>
                         <div class="alert alert-danger" id="loginAlert">
                             <span><?php echo $_SESSION['login_error']; ?></span>
 
-                            <button type="button" class="close-btn" onclick="document.getElementById('loginAlert').style.display='none';">❌</button>
+                            <button type="button" class="close-btn" onclick="document.getElementById('loginAlert').style.display='none';">X</button>
                         </div>
                         <?php unset($_SESSION['login_error']); ?>
                     <?php endif; ?>
