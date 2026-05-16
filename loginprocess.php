@@ -14,18 +14,15 @@ if (isset($_POST['login'])) {
         $_SESSION['Email'] = $row['Email'];
         $_SESSION['Role'] = $row['Role'];
         if ($_SESSION['Role'] == "Admin") {
-            header("Location: admin_dashboard.php");
-        } else {
-            header("Location: employee_dashboard.php");
+            header("Location: AdminDashboard.php");
+        } else if ($_SESSION['Role'] == "Staff") {
+            header("Location: EmployeeDashboard.php");
         }
     } else {
 
-        echo "<script>
-    alert('Invalid email, password, or role. Please try again.');
-    window.location.href = 'login.php'; // JavaScript moves the page AFTER the user clicks OK
-</script>";
+        $_SESSION['login_error'] = '<div class="alert alert-danger"> Invalid email, password, or role. Please try again.</div>';
+        header("Location: login.php");
         exit();
     }
 }
 mysqli_close($dbconn);
-?>

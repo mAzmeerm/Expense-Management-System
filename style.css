@@ -61,6 +61,21 @@ textarea {
   font-size: 0.95rem;
   margin-top: 0.35rem;
 }
+.alert {
+  padding: 0.8rem 1rem;
+  border-radius: 0.55rem;
+  margin-bottom: 1rem;
+}
+.alert.alert-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+.error-box .alert {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
 
 /* Login Page Styles */
 .btn-primary {

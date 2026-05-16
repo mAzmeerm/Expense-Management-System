@@ -4,7 +4,7 @@
 $user = "root"; //mysqlusername
 $pass = ""; //mysqlpassword
 $host = "localhost"; //server name or ipaddress
-$dbname = "expensemanagementsystem"; //your db name
+$dbname = "expensemanagementdb"; //your db name
 
 /*echo $user ."<br>";
 echo $pass ."<br>";

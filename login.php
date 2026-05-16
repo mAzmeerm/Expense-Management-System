@@ -1,3 +1,5 @@
+<?php
+session_start(); ?>
 <html>
 
 <head>
@@ -16,9 +18,15 @@
                 <h1>Welcome Back!</h1>
                 <p style="color:#64748b;margin:8px 0 20px;">Sign in to continue</p>
                 <form action="loginprocess.php" method="post">
+                    <?php if (isset($_SESSION['login_error'])): ?>
+                        <?php
+                       echo  $_SESSION['login_error'];
+                        unset($_SESSION['login_error']);
+                        ?>
+                    <?php endif; ?>
                     <label for="Login">Login as:</label> <br>
                     <div style="display:flex;gap:1rem;margin-top:.5rem;"><label style="margin:0;">
-                            <input type="radio" name="role" value="Employee" checked style="width:auto;">Employee</label>
+                            <input type="radio" name="role" value="Staff" checked style="width:auto;">Employee</label>
                         <label style="margin:0;">
                             <input type="radio" name="role" value="Admin" style="width:auto;">Admin </label>
                     </div>
