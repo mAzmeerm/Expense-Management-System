@@ -36,7 +36,9 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expen
 
 <body>
     <div class="layout">
-        <?php include 'AdminSidebar.php'; ?>
+        <?php 
+        $activePage = 'AdminDashboard.php';
+        include 'AdminSidebar.php'; ?>
 
         <div class="main-content">
             <header>
