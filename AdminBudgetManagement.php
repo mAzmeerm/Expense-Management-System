@@ -45,7 +45,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
 
         <div class="main-content">
 
-            <div class="container">
+            <div class="container"> <?php 
                 <div class="card">
 
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">

@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("dbconn.php");
 
 // Get the ClaimID and force it to be an integer for absolute safety
@@ -28,11 +29,19 @@ if (!$row) {
             // 3. Updated status query (Removed quotes around $claimID)
             $sqlstatus = "UPDATE ExpenseClaim SET Status='Approved' WHERE ClaimID = $claimID";
             mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
+
+            //approval message
+             $_SESSION['approval_message'] = '<div class="alert alert-success">Claim approved successfully.</div>';
+            header("Location: AdminExpenseApproval.php");
+             exit();
             
         } else if (isset($_POST['reject'])) {
             // 4. Updated status query (Removed quotes around $claimID)
             $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
             mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
+             $_SESSION['approval_message'] = '<div class="alert alert-danger">Claim rejected successfully.</div>';
+            header("Location: AdminExpenseApproval.php");
+             exit();
         }
     }
     

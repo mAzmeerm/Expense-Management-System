@@ -53,6 +53,12 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
             </header>
 
             <div class="container">
+                <?php if (isset($_SESSION['approval_message'])): ?>
+                    
+                        <?php echo $_SESSION['approval_message']; ?>
+                
+                    <?php unset($_SESSION['approval_message']); ?>
+                <?php endif; ?>
                 <div class="card">
                     <form class="searchbar" method="get" style="display: flex; align-items: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
                         <div style="flex: 1;">
@@ -90,11 +96,11 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                                     </td>
                                     <td>
                                         <?php if ($claim['Status'] === 'Pending') { ?>
-                                        <form method="post" action="approvalProcess.php" style="display:inline">
-                                            <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
-                                            <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
-                                            <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
-                                        </form>
+                                            <form method="post" action="approvalProcess.php" style="display:inline">
+                                                <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
+                                                <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
+                                                <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
+                                            </form>
                                         <?php } ?>
                                     </td>
                                 </tr>
