@@ -80,6 +80,7 @@ textarea {
   max-width: 1200px;
   margin: 0 auto;
 }
+
 /*button styles */
 .btn {
   display: inline-block;
@@ -95,7 +96,23 @@ textarea {
   background: var(--color-primary);
   color: #fff;
 }
-
+.btn-success {
+  background: var(--green);
+  color: #fff;
+}
+.btn-danger {
+  background: var(--red);
+  color: #fff;
+}
+.btn-secondary {
+  background: #fff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.btn-warning {
+  background: var(--yellow);
+  color: #fff;
+}
 /* Login Page Styles */
 .login-wrapper {
   display: flex;
@@ -285,7 +302,7 @@ th {
   color: #991b1b;
 }
 
-/* Stylish close button styling */
+/* Stylish button styling */
 .alert.alert-danger {
   background: #fee2e2;
   color: #991b1b;
@@ -312,7 +329,6 @@ th {
   transition: opacity 0.2s;
 }
 
-/* Subtle hover interaction */
 .close-btn:hover {
   opacity: 1;
 }
