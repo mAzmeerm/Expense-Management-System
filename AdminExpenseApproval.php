@@ -13,6 +13,9 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
+$sql2="select * from expenseclaim";
+	$query = mysqli_query($dbconn, $sql2) or die ("Error: " . mysqli_error());
+	$row = mysqli_num_rows($query);
 
 // 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
@@ -61,45 +64,44 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                         <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none;">Reset</a>
                     </form>
 
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            while ($claim = mysqli_fetch_assoc($claims)) {
+                            ?>
                                 <tr>
-                                    <th>Employee</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <td><?= htmlspecialchars($claim['Name']) ?></td>
+                                    <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
+                                    <td><?= money($claim['Amount']) ?></td>
+                                    <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
+                                    <td>
+                                        <span class="badge badge-pending">
+                                            <?= htmlspecialchars($claim['Status']) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form method="post" action="approvalProcess.php" style="display:inline">
+                                            <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
+                                            <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
+                                            <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                while ($claim = mysqli_fetch_assoc($claims)) {
-                                ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($claim['Name']) ?></td>
-                                        <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
-                                        <td><?= money($claim['Amount']) ?></td>
-                                        <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
-                                        <td>
-                                            <span class="badge badge-pending">
-                                                <?= htmlspecialchars($claim['Status']) ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="AdminExpenseAction.php?ClaimID=<?= $claim['ClaimID'] ?>">
-                                                <button name="action" value="approved" class="btn btn-success">Approve</button>
-                                                <button name="action" value="rejected" class="btn btn-danger">Reject</button>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php
-                                } 
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
