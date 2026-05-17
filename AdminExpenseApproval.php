@@ -56,16 +56,15 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
 
             <div class="container">
                 <?php if (isset($_SESSION['approval_message'])): ?>
-
                     <?php echo $_SESSION['approval_message']; ?>
-
                     <?php unset($_SESSION['approval_message']); ?>
                 <?php endif; ?>
+
                 <div class="card">
                     <form class="searchbar" method="get" style="display: flex; align-items: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
                         <div style="flex: 1;">
                             <label>Search claims:</label>
-                            <input type="text" name="search" placeholder="Search by employee, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                            <input type="text" name="search" placeholder="Search by employee, department, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                         </div>
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none;">Reset</a>
@@ -109,11 +108,13 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                                                 <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
                                                 <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
                                             </form>
+                                        <?php } else if ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected') { ?>
+                                            <span style="color: #888;">-</span>
                                         <?php } ?>
                                     </td>
                                 </tr>
                             <?php
-                            }
+                            } 
                             ?>
                         </tbody>
                     </table>
