@@ -14,7 +14,7 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
     $adminName = "Admin";
 }
 $sql2 = "select * from expenseclaim";
-$query = mysqli_query($dbconn, $sql2) or die("Error: " . mysqli_error());
+$query = mysqli_query($dbconn, $sql2) or die("Error: " . mysqli_error($dbconn));
 $row = mysqli_num_rows($query);
 
 // 2. Process search keywords securely
