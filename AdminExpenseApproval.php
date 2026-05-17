@@ -21,13 +21,15 @@ $row = mysqli_num_rows($query);
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 
 // 3. Fetch all matching Pending claims
-$sqlClaims = "SELECT c.*, e.Name, cat.CategoryName 
+$sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               FROM expenseclaim c 
               JOIN employee e ON c.EmployeeID = e.EmployeeID 
               JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
+              JOIN department d ON e.DepartmentID = d.DepartmentID
               WHERE (e.Name LIKE '%$search%' 
                    OR cat.CategoryName LIKE '%$search%' 
-                   OR c.Status LIKE '%$search%') 
+                   OR c.Status LIKE '%$search%' 
+                   OR d.DepartmentName LIKE '%$search%') 
               ORDER BY c.ClaimDate DESC";
 
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
@@ -54,9 +56,9 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
 
             <div class="container">
                 <?php if (isset($_SESSION['approval_message'])): ?>
-                    
-                        <?php echo $_SESSION['approval_message']; ?>
-                
+
+                    <?php echo $_SESSION['approval_message']; ?>
+
                     <?php unset($_SESSION['approval_message']); ?>
                 <?php endif; ?>
                 <div class="card">
@@ -72,8 +74,11 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                     <table>
                         <thead>
                             <tr>
+                                <th>Claim ID</th>
                                 <th>Employee</th>
+                                <th>Department</th>
                                 <th>Category</th>
+                                <th>Description</th>
                                 <th>Amount</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -85,8 +90,11 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                             while ($claim = mysqli_fetch_assoc($claims)) {
                             ?>
                                 <tr>
+                                    <td><?= htmlspecialchars($claim['ClaimID']) ?></td>
                                     <td><?= htmlspecialchars($claim['Name']) ?></td>
+                                    <td><?= htmlspecialchars($claim['DepartmentName']) ?></td>
                                     <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
+                                    <td><?= htmlspecialchars($claim['Description']) ?></td>
                                     <td><?= money($claim['Amount']) ?></td>
                                     <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
                                     <td>
