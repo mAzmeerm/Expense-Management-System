@@ -70,7 +70,7 @@ textarea {
 /* Alert styles */
 .alert {
   display:flex;
-  justify-content: space-between; /* Pushes the message to left, X button to right */
+  justify-content: space-between; 
   align-items: center;
   padding: 0.8rem 1rem;
   border-radius: 0.55rem;
@@ -333,17 +333,18 @@ th {
 
 /* Stylish button styling */
 .close-btn {
-  flex:1;
   background: none;
   border: none;
-  color: #991b1b;
-  font-size: 1.3rem;
+  color: inherit;
+  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   line-height: 1;
   padding: 0 0 0 10px;
   opacity: 0.6;
   transition: opacity 0.2s;
+  margin-left: auto;
+  width: auto;
 }
 
 .close-btn:hover {

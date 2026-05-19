@@ -1,4 +1,3 @@
-
 <?php
 /* php& mysqldb connection file */
 $user = "root"; //mysqlusername
