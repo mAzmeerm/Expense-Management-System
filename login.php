@@ -22,7 +22,6 @@ include("function.php");
                 <p style="color:#64748b;margin:8px 0 20px;">Sign in to continue</p>
                 <form action="loginprocess.php" method="post">
                     <?php show_alert(); ?>
-
                     <label for="Login">Login as:</label> <br>
                     <div style="display: flex; gap: 1.5rem; margin-top: .5rem; align-items: center;">
                         <label style="margin: 0; font-weight: normal; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
