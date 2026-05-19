@@ -43,9 +43,17 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         include 'AdminSidebar.php';
         ?>
 
-        <div class="main-content">
+<<<<<<< HEAD
+ <div class="main-content">
+            <header>
+                <strong>Expense Approval</strong>
+                <span>Welcome, <?php echo $adminName; ?></span>
+            </header>
+            
+        <div class="mn-content">
 
             <div class="container"> 
+
                 <div class="card">
 
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -55,7 +63,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                         </a>
                     </div>
 
-                    <form class="searchbar" method="get" style="display: flex; align-items: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <form class="searchbar" method="get">
                         <div style="flex: 1;">
                             <label>Search budget:</label>
                             <input type="text" name="search" placeholder="Department or year" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
@@ -103,11 +111,9 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>
