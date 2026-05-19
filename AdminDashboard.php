@@ -22,7 +22,7 @@ if ($row = mysqli_fetch_assoc($query)) {
 
 $budget = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT COALESCE(SUM(AllocatedAmount),0) total_budget, COALESCE(SUM(SpentAmount),0) total_spent, COALESCE(SUM(RemainAmount),0) total_remaining FROM budget"));
 $pending = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT COUNT(*) c FROM expenseclaim WHERE status='Pending'"))['c'];
-$chart = mysqli_query($dbconn, "SELECT cat.CategoryName, COALESCE(SUM(c.amount),0) total FROM expensecategory cat LEFT JOIN expenseclaim c ON cat.CategoryID=c.CategoryID AND c.Status='Approved' GROUP BY cat.CategoryID ORDER BY total DESC");
+$chart = mysqli_query($dbconn, "SELECT d.DepartmentName, COALESCE(SUM(c.amount),0) total FROM department d LEFT JOIN employee e ON d.DepartmentID = e.DepartmentID LEFT JOIN expenseclaim c ON e.EmployeeID = c.EmployeeID AND c.Status='Approved' GROUP BY d.DepartmentID ORDER BY total DESC");
 $max = 1;
 $chart_rows = [];
 while ($r = mysqli_fetch_assoc($chart)) {
@@ -80,7 +80,7 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
                 <div class="grid-2">
 
                     <div class="card">
-                        <h3>Approved Spending by Category</h3>
+                        <h3>Approved Spending by Department</h3>
                         <div class="chart-bars">
                             <?php foreach ($chart_rows as $row): $h = max(4, ($row['total'] / $max) * 100); ?>
                                 <div class="chart-bar" style="height:<?= $h ?>%">
@@ -90,7 +90,7 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
                         </div>
                         <div class="chart-labels">
                             <?php foreach ($chart_rows as $row): ?>
-                                <div><?= $row['CategoryName'] ?></div>
+                                <div><?= $row['DepartmentName'] ?></div>
                             <?php endforeach; ?>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("dbconn.php");
+include("function.php");
 
 if (isset($_POST['login'])) {
     $email = mysqli_real_escape_string($dbconn, $_POST['Email']);
@@ -23,9 +24,7 @@ if (isset($_POST['login'])) {
             }
     } 
     else {
-        $_SESSION['login_error'] = '<div class="alert"> Invalid email, password, or role. Please try again.</div>';
-        header("Location: login.php");
-        exit();
+        set_alert('error','Invalid email, password, or role. Please try again.','login.php');
     }
 }
 mysqli_close($dbconn);

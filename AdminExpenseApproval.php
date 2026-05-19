@@ -55,13 +55,9 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
             </header>
 
             <div class="container">
-                <?php if (isset($_SESSION['approval_message'])): ?>
-                    <?php echo $_SESSION['approval_message']; ?>
-                    <?php unset($_SESSION['approval_message']); ?>
-                <?php endif; ?>
-
+                <?php show_alert(); ?>
                 <div class="card">
-                    <form class="searchbar" method="get" style="display: flex; align-items: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <form class="searchbar" method="get">
                         <div style="flex: 1;">
                             <label>Search claims:</label>
                             <input type="text" name="search" placeholder="Search by employee, department, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
