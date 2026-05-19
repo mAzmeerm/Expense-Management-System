@@ -1,8 +1,6 @@
 <?php
-session_start();
-include("dbconn.php");
 include("function.php");
-
+require_login();
 
 $loggedInUser = (int) $_SESSION['UserID'];
 
