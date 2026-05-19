@@ -62,22 +62,25 @@ textarea {
   font-size: 0.95rem;
   margin-top: 0.35rem;
 }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Alert styles */
 .alert {
+  display:flex;
+  justify-content: space-between; /* Pushes the message to left, X button to right */
+  align-items: center;
   padding: 0.8rem 1rem;
   border-radius: 0.55rem;
   margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 .alert.alert-success {
   background: #dcfce7;
   color: #166534;
   border: 1px solid #86efac;
-  padding: 0.8rem 1rem;
-  border-radius: 0.55rem;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between; /* Pushes the message to left, X button to right */
-  align-items: center;
-  font-size: 0.9rem;
 }
 .alert.alert-error {
   background: #fee2e2;
@@ -88,28 +91,6 @@ textarea {
   background: #dbeafe;
   color: #1e40af;
   border: 1px solid #bfdbfe;
-}
-.alert.alert-danger {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-  padding: 0.8rem 1rem;
-  border-radius: 0.55rem;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between; /* Pushes the message to left, X button to right */
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.error-box .alert {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 /*button styles */
@@ -144,6 +125,7 @@ textarea {
   background: var(--yellow);
   color: #fff;
 }
+
 /* Login Page Styles */
 .login-wrapper {
   display: flex;
@@ -211,6 +193,14 @@ textarea {
   padding: 1.6rem;
 }
 
+/*search bar styles */
+.searchbar{
+  display: flex; 
+  align-items: flex-end; 
+  gap: 0.5rem;
+   margin-bottom: 1.5rem
+}
+
 /* Admin Dashboard Styles */
 .layout {
   display: flex;
@@ -254,6 +244,7 @@ textarea {
 }
 
 /*Bar chart styles */
+
 .chart-bars {
   display: flex;
   height: 230px;
@@ -263,6 +254,7 @@ textarea {
   border-bottom: 1px solid var(--color-border);
   padding: 1rem 1rem 0;
 }
+
 .chart-bar {
   flex: 1;
   min-height: 8px;
@@ -281,17 +273,23 @@ textarea {
   margin-bottom: 0.3rem;
 }
 .chart-labels {
+  flex : 1;
   display: flex;
-  gap: 1rem;
-  padding: 0.5rem 1rem 0 2rem;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 10px;
 }
+
 .chart-labels div {
   flex: 1;
   text-align: center;
-  color: #64748b;
-  font-size: 0.82rem;
+  font-size: 12px;
+  color: #555;
+  word-wrap: break-word;
+  padding: 0 4px;
+  white-space: nowrap;
 }
-
+ 
 /*table styles */
 table {
   width: 100%;
@@ -335,6 +333,7 @@ th {
 
 /* Stylish button styling */
 .close-btn {
+  flex:1;
   background: none;
   border: none;
   color: #991b1b;
