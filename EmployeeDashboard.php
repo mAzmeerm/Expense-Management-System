@@ -72,29 +72,29 @@ $recent = mysqli_stmt_get_result($recentStmt);
         <div class="main-content">
             <header>
                 <strong>Employee Dashboard</strong>
-                <span>Welcome, <?= e($staffName) ?></span>
+                <span>Welcome, <?= $staffName ?></span>
             </header>
 
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-card" style="border-left-color:#2563eb">
                         <h4>Total Claims</h4>
-                        <h3><?= e($stats['total_count'] ?? 0) ?></h3>
+                        <h3><?= $stats['total_count'] ?? 0 ?></h3>
                     </div>
 
                     <div class="stat-card" style="border-left-color:#d97706">
                         <h4>Pending Claims</h4>
-                        <h3><?= e($stats['pending_count'] ?? 0) ?></h3>
+                        <h3><?= $stats['pending_count'] ?? 0 ?></h3>
                     </div>
 
                     <div class="stat-card" style="border-left-color:#16a34a">
                         <h4>Approved Claims</h4>
-                        <h3><?= e($stats['approved_count'] ?? 0) ?></h3>
+                        <h3><?= $stats['approved_count'] ?? 0  ?></h3>
                     </div>
 
                     <div class="stat-card" style="border-left-color:#dc2626">
                         <h4>Rejected Claims</h4>
-                        <h3><?= e($stats['rejected_count'] ?? 0) ?></h3>
+                        <h3><?= $stats['rejected_count'] ?? 0 ?></h3>
                     </div>
                 </div>
 
@@ -123,14 +123,14 @@ $recent = mysqli_stmt_get_result($recentStmt);
                             <?php if (mysqli_num_rows($recent) > 0): ?>
                                 <?php while ($row = mysqli_fetch_assoc($recent)): ?>
                                     <tr>
-                                        <td><?= e($row['ClaimID']) ?></td>
-                                        <td><?= e($row['Description']) ?></td>
-                                        <td><?= e($row['CategoryName']) ?></td>
+                                        <td><?= $row['ClaimID'] ?></td>
+                                        <td><?= $row['Description'] ?></td>
+                                        <td><?= $row['CategoryName'] ?></td>
                                         <td><?= money($row['Amount']) ?></td>
-                                        <td><?= e(date('Y-m-d', strtotime($row['ClaimDate']))) ?></td>
+                                        <td><?= date('Y-m-d', strtotime($row['ClaimDate'])) ?></td>
                                         <td>
-                                            <span class="badge badge-<?= strtolower(e($row['Status'])) ?>">
-                                                <?= e($row['Status']) ?>
+                                            <span class="badge badge-<?= strtolower($row['Status']) ?>">
+                                                <?= $row['Status'] ?>
                                             </span>
                                         </td>
                                     </tr>
