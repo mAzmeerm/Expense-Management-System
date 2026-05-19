@@ -4,6 +4,11 @@ include("dbconn.php");
 include("function.php");
 $loggedInUser = $_SESSION['UserID'];
 
+if ($loggedInUser == '' or !isset($loggedInUser)) {
+    header("Location: login.php");
+    exit();
+}
+
 // Query to look up this specific employee
 $sql = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
@@ -22,10 +27,15 @@ $max = 1;
 $chart_rows = [];
 while ($r = mysqli_fetch_assoc($chart)) {
     $chart_rows[] = $r;
-    if ($r['total'] > $max) 
+    if ($r['total'] > $max)
         $max = $r['total'];
 }
-$recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expenseclaim c JOIN employee e ON c.EmployeeID=e.EmployeeID JOIN expensecategory cat ON c.CategoryID=cat.CategoryID ORDER BY c.ClaimDate DESC LIMIT 5");
+$recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
+                                 FROM expenseclaim c 
+                                 JOIN employee e ON c.EmployeeID=e.EmployeeID 
+                                 JOIN expensecategory cat ON c.CategoryID=cat.CategoryID 
+                                 JOIN department d ON e.DepartmentID = d.DepartmentID 
+                                 ORDER BY c.ClaimDate DESC LIMIT 5");
 ?>
 <html>
 
@@ -36,7 +46,7 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expen
 
 <body>
     <div class="layout">
-        <?php 
+        <?php
         $activePage = 'AdminDashboard.php';
         include 'AdminSidebar.php'; ?>
 
@@ -83,23 +93,30 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expen
                                 <div><?= $row['CategoryName'] ?></div>
                             <?php endforeach; ?>
                         </div>
-                    </div> <div class="card">
+                    </div>
+                    <div class="card">
                         <h3>Recent Claims</h3>
                         <table>
                             <thead>
                                 <tr>
+                                    <th>Claim ID</th>
                                     <th>Employee</th>
+                                    <th>Department</th>
                                     <th>Category</th>
                                     <th>Amount</th>
+                                    <th>Date</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php while ($r = mysqli_fetch_assoc($recent)): ?>
                                     <tr>
+                                        <td><?= $r['ClaimID'] ?></td>
                                         <td><?= $r['Name'] ?></td>
-                                        <td><?= $r['CategoryName']?></td>
+                                        <td><?= $r['DepartmentName'] ?></td>
+                                        <td><?= $r['CategoryName'] ?></td>
                                         <td><?= money($r['Amount']) ?></td>
+                                        <td><?= date('Y-m-d', strtotime($r['ClaimDate'])) ?></td>
                                         <td>
                                             <span class="badge badge-<?= strtolower($r['Status']) ?>">
                                                 <?= $r['Status'] ?>
@@ -109,6 +126,11 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName FROM expen
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
-                    </div> </div> </div> </div> </div> </body>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 
 </html>

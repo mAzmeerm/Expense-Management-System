@@ -13,22 +13,23 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-$sql2="select * from expenseclaim";
-	$query = mysqli_query($dbconn, $sql2) or die ("Error: " . mysqli_error());
-	$row = mysqli_num_rows($query);
+$sql2 = "select * from expenseclaim";
+$query = mysqli_query($dbconn, $sql2) or die("Error: " . mysqli_error($dbconn));
+$row = mysqli_num_rows($query);
 
 // 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 
 // 3. Fetch all matching Pending claims
-$sqlClaims = "SELECT c.*, e.Name, cat.CategoryName 
+$sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               FROM expenseclaim c 
               JOIN employee e ON c.EmployeeID = e.EmployeeID 
               JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
-              WHERE c.Status = 'Pending' 
-              AND (e.Name LIKE '%$search%' 
+              JOIN department d ON e.DepartmentID = d.DepartmentID
+              WHERE (e.Name LIKE '%$search%' 
                    OR cat.CategoryName LIKE '%$search%' 
-                   OR c.Status LIKE '%$search%') 
+                   OR c.Status LIKE '%$search%' 
+                   OR d.DepartmentName LIKE '%$search%') 
               ORDER BY c.ClaimDate DESC";
 
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
@@ -54,11 +55,16 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
             </header>
 
             <div class="container">
+                <?php if (isset($_SESSION['approval_message'])): ?>
+                    <?php echo $_SESSION['approval_message']; ?>
+                    <?php unset($_SESSION['approval_message']); ?>
+                <?php endif; ?>
+
                 <div class="card">
                     <form class="searchbar" method="get" style="display: flex; align-items: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
                         <div style="flex: 1;">
                             <label>Search claims:</label>
-                            <input type="text" name="search" placeholder="Search by employee, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                            <input type="text" name="search" placeholder="Search by employee, department, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                         </div>
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none;">Reset</a>
@@ -67,8 +73,11 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                     <table>
                         <thead>
                             <tr>
+                                <th>Claim ID</th>
                                 <th>Employee</th>
+                                <th>Department</th>
                                 <th>Category</th>
+                                <th>Description</th>
                                 <th>Amount</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -80,25 +89,32 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                             while ($claim = mysqli_fetch_assoc($claims)) {
                             ?>
                                 <tr>
+                                    <td><?= htmlspecialchars($claim['ClaimID']) ?></td>
                                     <td><?= htmlspecialchars($claim['Name']) ?></td>
+                                    <td><?= htmlspecialchars($claim['DepartmentName']) ?></td>
                                     <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
+                                    <td><?= htmlspecialchars($claim['Description']) ?></td>
                                     <td><?= money($claim['Amount']) ?></td>
                                     <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
                                     <td>
-                                        <span class="badge badge-pending">
+                                        <span class="badge badge-<?= strtolower($claim['Status']) ?>">
                                             <?= htmlspecialchars($claim['Status']) ?>
                                         </span>
                                     </td>
                                     <td>
-                                        <form method="post" action="approvalProcess.php" style="display:inline">
-                                            <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
-                                            <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
-                                            <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
-                                        </form>
+                                        <?php if ($claim['Status'] === 'Pending') { ?>
+                                            <form method="post" action="approvalProcess.php" style="display:inline">
+                                                <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
+                                                <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
+                                                <button type="submit" name="reject" value="1" class="btn btn-danger">Reject</button>
+                                            </form>
+                                        <?php } else if ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected') { ?>
+                                            <span style="color: #888;">-</span>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php
-                            }
+                            } 
                             ?>
                         </tbody>
                     </table>
