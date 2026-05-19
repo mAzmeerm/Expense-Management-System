@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("dbconn.php");
+include("function.php");
 
 // Get the ClaimID and force it to be an integer for absolute safety
 $claimID = (int)$_REQUEST["ClaimID"];
@@ -18,22 +19,17 @@ if (!$row) {
 
         if (isset($_POST['approve'])) {
 
-            $claimamount = "SELECT c.Amount, b.SpentAmount 
+            $claimamount = "SELECT c.Amount
                               FROM ExpenseClaim c 
-                              JOIN Employee e ON c.EmployeeID = e.EmployeeID 
-                              JOIN Budget b ON e.DepartmentID = b.DepartmentID 
                               WHERE c.ClaimID = $claimID";
 
             $result = mysqli_query($dbconn, $claimamount) or die("Error fetching amounts: " . mysqli_error($dbconn));
             $rowAmounts = mysqli_fetch_assoc($result);
 
             if ($rowAmounts) {
-                // 4. Extract the values using their exact database column names
-                $claimAmount = $rowAmounts['Amount'];
-                $spentAmount = $rowAmounts['SpentAmount'];
+                $claimamount = $rowAmounts['Amount'];
             }
 
-            // Fetch the remaining budget for the department
             $remainBudgetResult = mysqli_query($dbconn, "SELECT RemainAmount 
                                                          FROM Budget b 
                                                          JOIN Employee e ON b.DepartmentID = e.DepartmentID
@@ -41,15 +37,11 @@ if (!$row) {
                                                          WHERE c.ClaimID = $claimID") or die("Error fetching remaining budget: " . mysqli_error($dbconn));
             $remainBudgetRow = mysqli_fetch_assoc($remainBudgetResult);
 
-            // Calculate the new spent amount if this claim is approved
-            $newSpentAmount = $spentAmount + $claimAmount;
             //update budget and approve is request balance is sufficient
-            if ($newSpentAmount > $remainBudgetRow['RemainAmount']) {
+            if ($claimamount > $remainBudgetRow['RemainAmount']) {
                 $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
-                $_SESSION['approval_message'] = '<div class="alert alert-danger">auto-reject this claim. Insufficient remaining department budget.</div>';
-                header("Location: AdminExpenseApproval.php");
-                exit();
+                set_alert('error','auto-reject this claim. Insufficient remaining department budget.','AdminExpenseApproval.php');
             } else {
                 // 2. Updated JOIN query (Removed quotes around $claimID at the end)
                 $budgetsql = "UPDATE Budget b 
@@ -62,24 +54,19 @@ if (!$row) {
                 mysqli_query($dbconn, $budgetsql) or die("Error updating budget: " . mysqli_error($dbconn));
 
                 // 3. Updated status query (Removed quotes around $claimID)
-                $sqlstatus = "UPDATE ExpenseClaim SET Status='Approved' WHERE ClaimID = $claimID";
+                $sqlstatus = "UPDATE ExpenseClaim 
+                              SET Status='Approved' WHERE ClaimID = $claimID";
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
 
                 //approval message
-                $_SESSION['approval_message'] = '<div class="alert alert-success">Claim approved successfully.</div>';
-                header("Location: AdminExpenseApproval.php");
-                exit();
+                set_alert('success','claim approved successfully.','AdminExpenseApproval.php');
             }
         } else if (isset($_POST['reject'])) {
             // 4. Updated status query (Removed quotes around $claimID)
             $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
             mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
-            $_SESSION['approval_message'] = '<div class="alert alert-danger">Claim rejected successfully.</div>';
-            header("Location: AdminExpenseApproval.php");
-            exit();
+            set_alert('error','claim rejected successfully.','AdminExpenseApproval.php');
         }
     }
-
-    header("Location: AdminExpenseApproval.php");
-    exit();
 }
+?>
