@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 include("dbconn.php");
 include("function.php");
 ?>
@@ -25,10 +25,14 @@ include("function.php");
                     <label for="Login">Login as:</label> <br>
                     <div style="display: flex; gap: 1.5rem; margin-top: .5rem; align-items: center;">
                         <label style="margin: 0; font-weight: normal; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="radio" name="role" value="Staff" checked style="width: auto; margin: 0;"> Employee
+                            <span class="menu-item-wrapper">
+                                <input type="radio" name="role" value="Staff" checked style="width: auto; margin: 0;"> <img src="IconEmployee2.svg" alt="Employee" width="16" height="16">Employee
+                            </span>
                         </label>
                         <label style="margin: 0; font-weight: normal; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="radio" name="role" value="Admin" style="width: auto; margin: 0;"> Admin
+                            <span class="menu-item-wrapper">
+                                <input type="radio" name="role" value="Admin" style="width: auto; margin: 0;"> <img src="IconAdmin.svg" alt="Admin" width="16" height="16">Admin
+                            </span>
                         </label>
                     </div>
                     <br>

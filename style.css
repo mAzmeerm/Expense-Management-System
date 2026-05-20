@@ -125,6 +125,23 @@ textarea {
   background: var(--yellow);
   color: #fff;
 }
+.close-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0 0 10px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  margin-left: auto;
+  width: auto;
+}
+.close-btn:hover {
+  opacity: 1;
+}
 
 /* Login Page Styles */
 .login-wrapper {
@@ -330,25 +347,11 @@ th {
   background: #fee2e2;
   color: #991b1b;
 }
-
-/* Stylish button styling */
-.close-btn {
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0 0 0 10px;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  margin-left: auto;
-  width: auto;
-}
-
-.close-btn:hover {
-  opacity: 1;
+/*icon styles */
+.menu-item-wrapper {
+  display: inline-flex ;
+  align-items: center ;
+  white-space: nowrap ;
 }
 
 /* Responsive styles */
