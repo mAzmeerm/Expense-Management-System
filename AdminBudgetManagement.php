@@ -43,77 +43,79 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         include 'AdminSidebar.php';
         ?>
 
-<<<<<<< HEAD
- <div class="main-content">
+        <<<<<<< HEAD <div class="main-content">
             <header>
                 <strong>Expense Approval</strong>
                 <span>Welcome, <?php echo $adminName; ?></span>
             </header>
-            
-        <div class="mn-content">
 
-            <div class="container"> 
+            <div class="mn-content">
 
-                <div class="card">
+                <div class="container">
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                        <h3>Budget Management</h3>
-                        <a href="AdminAddBudget.php" class="btn btn-primary" style="text-decoration:none;">
-                            + Add New Budget
-                        </a>
-                    </div>
+                    <div class="card">
 
-                    <form class="searchbar" method="get">
-                        <div style="flex: 1;">
-                            <label>Search budget:</label>
-                            <input type="text" name="search" placeholder="Department or year" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <h3>Budget Management</h3>
+                            <a href="AdminAddBudget.php" class="btn btn-primary" style="text-decoration:none;">
+                                + Add New Budget
+                            </a>
                         </div>
-                        <button class="btn btn-primary" type="submit">Search</button>
-                        <a class="btn btn-secondary" href="AdminBudgetManagement.php" style="text-decoration: none;">Reset</a>
-                    </form>
 
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Department</th>
-                                    <th>Year</th>
-                                    <th>Allocated</th>
-                                    <th>Spent</th>
-                                    <th>Remaining</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
+                        <form class="searchbar" method="get">
+                            <div style="flex: 1;">
+                                <label>Search budget:</label>
+                                <input type="text" name="search" placeholder="Department or year"
+                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                            </div>
+                            <button class="btn btn-primary" type="submit">Search</button>
+                            <a class="btn btn-secondary" href="AdminBudgetManagement.php"
+                                style="text-decoration: none;">Reset</a>
+                        </form>
 
-                            <tbody>
-                                <?php
-                                if (mysqli_num_rows($budgets) > 0) {
-                                    while ($budget = mysqli_fetch_assoc($budgets)) {
-                                ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($budget['DepartmentName']) ?></td>
-                                            <td><?= htmlspecialchars($budget['Year']) ?></td>
-                                            <td><?= money($budget['AllocatedAmount']) ?></td>
-                                            <td><?= money($budget['SpentAmount']) ?></td>
-                                            <td><?= money($budget['RemainAmount']) ?></td>
-                                            <td><?= htmlspecialchars($budget['Description']) ?></td>
-                                        </tr>
-                                    <?php
-                                    }
-                                } else {
-                                    ?>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td colspan="6" style="text-align:center;">No budget found.</td>
+                                        <th>Department</th>
+                                        <th>Year</th>
+                                        <th>Allocated</th>
+                                        <th>Spent</th>
+                                        <th>Remaining</th>
+                                        <th>Description</th>
                                     </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    <?php
+                                    if (mysqli_num_rows($budgets) > 0) {
+                                        while ($budget = mysqli_fetch_assoc($budgets)) {
+                                            ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($budget['DepartmentName']) ?></td>
+                                                <td><?= htmlspecialchars($budget['Year']) ?></td>
+                                                <td><?= money($budget['AllocatedAmount']) ?></td>
+                                                <td><?= money($budget['SpentAmount']) ?></td>
+                                                <td><?= money($budget['RemainAmount']) ?></td>
+                                                <td><?= htmlspecialchars($budget['Description']) ?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <tr>
+                                            <td colspan="6" style="text-align:center;">No budget found.</td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 </body>
 
 </html>
