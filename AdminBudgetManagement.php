@@ -43,7 +43,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         include 'AdminSidebar.php';
         ?>
 
-        <<<<<<< HEAD <div class="main-content">
+       <div class="main-content">
             <header>
                 <strong>Expense Approval</strong>
                 <span>Welcome, <?php echo $adminName; ?></span>
