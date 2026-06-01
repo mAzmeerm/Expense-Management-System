@@ -49,14 +49,12 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
         ?>
 
         <div class="main-content">
-            <header>
-                <strong>Expense Approval</strong>
-                <span>Welcome, <?php echo $adminName; ?></span>
-            </header>
+            <?php show_header('Admin Expense Approval', $adminName); ?>
 
             <div class="container">
                 <?php show_alert(); ?>
                 <div class="card">
+                    <a class="btn btn-primary" href="AdminClaims.php" style="text-decoration: none; margin-bottom: 16px;">+ Submit new claim</a>
                     <form class="searchbar" method="get">
                         <div style="flex: 1;">
                             <label>Search claims:</label>

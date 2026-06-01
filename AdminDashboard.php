@@ -51,9 +51,7 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
         include 'AdminSidebar.php'; ?>
 
         <div class="main-content">
-            <header>
-                <strong>Admin Dashboard</strong>
-                <span>Welcome, <?php echo $adminName; ?></span>
+            <?php show_header('Admin Dashboard', $adminName); ?>
             </header>
 
             <div class="container">

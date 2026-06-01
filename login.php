@@ -13,8 +13,8 @@ include("function.php");
 <body>
     <div class="login-wrapper">
         <div class="login-brand">
-            <h1>AdadasSport Enterprise</h1>
-            <p>Manage expenses, budgets, employees and approvals securely.</p>
+            <img src="logo.png" alt="AdadasSport Logo" width="200" height="200">
+            <p>AdadasSport Expense Management System</p>
         </div>
         <div class="login-panel">
             <div class="card login-card">

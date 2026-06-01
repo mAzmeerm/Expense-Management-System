@@ -39,4 +39,13 @@ function show_alert() {
         unset($_SESSION['alert']);
     }
 }
+
+function show_header($title,$Name) {
+    echo '<header>';
+    echo '<strong>' . $title . '</strong>';
+    if (isset($_SESSION['UserID'])) {
+        echo '<span>Welcome, ' . $Name. '</span>';
+    }
+    echo '</header>';
+}
 ?>

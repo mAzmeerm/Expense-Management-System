@@ -44,11 +44,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         ?>
 
        <div class="main-content">
-            <header>
-                <strong>Expense Approval</strong>
-                <span>Welcome, <?php echo $adminName; ?></span>
-            </header>
-
+            <?php show_header('Admin Budget Management', $adminName); ?>
             <div class="mn-content">
 
                 <div class="container">

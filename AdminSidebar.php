@@ -11,7 +11,7 @@ $navItems = [
 ];
 ?>
 <div class="sidebar">
-    <div class="sidebar-header">AdadasSport Enterprises</div>
+    <div class="sidebar-header"><img src="logo.png" alt="AdadasSport Logo" width="100" height="100"></div>
     <nav>
         <?php foreach ($navItems as $file => $label): ?>
             <a class="<?= ($activePage ?? '') === $file ? 'active' : '' ?>" href="<?= $file ?>">
