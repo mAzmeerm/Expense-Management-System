@@ -352,7 +352,7 @@ th {
   display: inline-flex ;
   align-items: center ;
   white-space: nowrap ;
-}
+  
 
 /* Responsive styles */
 @media (max-width: 850px) {
