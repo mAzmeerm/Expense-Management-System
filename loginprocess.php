@@ -24,7 +24,7 @@ if (isset($_POST['login'])) {
             }
     } 
     else {
-        set_alert('error','Invalid email, password, or role. Please try again.','login.php');
+        set_alert('error','<img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Invalid email, password, or role. Please try again.','login.php');
     }
 }
 mysqli_close($dbconn);

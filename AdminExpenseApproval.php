@@ -108,7 +108,7 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                                     </td>
                                 </tr>
                             <?php
-                            } 
+                            }
                             ?>
                         </tbody>
                     </table>
