@@ -54,7 +54,13 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
             <div class="container">
                 <?php show_alert(); ?>
                 <div class="card">
-                    <a class="btn btn-primary" href="AdminClaims.php" style="text-decoration: none; margin-bottom: 16px;">+ Submit new claim</a>
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3>Expense Approval</h3>
+                        <a href="AdminClaims.php" class="btn btn-primary" style="text-decoration:none;">
+                            + Add New Claims
+                        </a>
+                    </div>
                     <form class="searchbar" method="get">
                         <div style="flex: 1;">
                             <label>Search claims:</label>

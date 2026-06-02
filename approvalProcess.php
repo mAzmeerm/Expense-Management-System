@@ -41,11 +41,11 @@ if (!$row) {
             if ($claimamount > $remainBudgetRow['RemainAmount']) {
                 $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
-                set_alert('error','auto-reject this claim. Insufficient remaining department budget.','AdminExpenseApproval.php');
+                set_alert('error','<img src="IconError.png" alt="Error" width="20" height="20" style="margin-right: 5px;"> Auto-rejected this claim. Insufficient remaining department budget.','AdminExpenseApproval.php');
             } else {
                 // 2. Updated JOIN query (Removed quotes around $claimID at the end)
                 $budgetsql = "UPDATE Budget b 
-                          JOIN Employee e ON b.DepartmentID = e.DepartmentID 
+                          JOIN Employee e ON b.DepartmentID = e.DepartmentID sql
                           JOIN ExpenseClaim c ON e.EmployeeID = c.EmployeeID
                           SET b.SpentAmount = b.SpentAmount + c.Amount,
                               b.RemainAmount = b.RemainAmount - c.Amount
@@ -59,13 +59,13 @@ if (!$row) {
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
 
                 //approval message
-                set_alert('success','claim approved successfully.','AdminExpenseApproval.php');
+                set_alert('success','<img src="IconSuccess.png" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Claim approved successfully.','AdminExpenseApproval.php');
             }
         } else if (isset($_POST['reject'])) {
             // 4. Updated status query (Removed quotes around $claimID)
             $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
             mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
-            set_alert('error','claim rejected successfully.','AdminExpenseApproval.php');
+            set_alert('error','<img src="IconError.png" alt="Error" width="20" height="20" style="margin-right: 5px;"> Claim rejected successfully.','AdminExpenseApproval.php');
         }
     }
 }
