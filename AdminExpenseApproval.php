@@ -34,11 +34,11 @@ $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
 
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
 ?>
-<!DOCTYPE html>
-<html>
 
+
+<html>
 <head>
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <link rel="stylesheet" href="style.css">
     <title>Admin Expense Approval</title>
 </head>
 

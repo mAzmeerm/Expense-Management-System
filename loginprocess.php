@@ -11,21 +11,19 @@ if (isset($_POST['login'])) {
     $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
     if (mysqli_num_rows($query) > 0) {
         $row = mysqli_fetch_assoc($query);
-            $_SESSION['UserID'] = $row['EmployeeID'];
-            $_SESSION['Email'] = $row['Email'];
-            $_SESSION['Role'] = $row['Role'];
-            $_SESSION['Password'] = $row['Password'];
-            if ($_SESSION['Role'] == "Admin") {
-                header("Location: AdminDashboard.php");
-                exit();
-            } else if ($_SESSION['Role'] == "Staff") {
-                header("Location: EmployeeDashboard.php");
-                exit();
-            }
-    } 
-    else {
-        set_alert('error','<img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Invalid email, password, or role. Please try again.','login.php');
+        $_SESSION['UserID'] = $row['EmployeeID'];
+        $_SESSION['Email'] = $row['Email'];
+        $_SESSION['Role'] = $row['Role'];
+        $_SESSION['Password'] = $row['Password'];
+        if ($_SESSION['Role'] == "Admin") {
+            header("Location: AdminDashboard.php");
+            exit();
+        } else if ($_SESSION['Role'] == "Staff") {
+            header("Location: EmployeeDashboard.php");
+            exit();
+        }
+    } else {
+        set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Invalid email, password, or role. Please try again.</span>', 'login.php');
     }
 }
 mysqli_close($dbconn);
-?>

@@ -26,11 +26,10 @@ $sqlEmployees = "SELECT e.*, d.DepartmentName
                  ORDER BY e.Name ASC";
 $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_error($dbconn));
 ?>
-<!DOCTYPE html>
-<html>
 
+<html>
 <head>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css">
     <title>Admin Employee Management</title>
 </head>
 
