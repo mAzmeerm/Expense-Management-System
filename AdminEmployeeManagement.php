@@ -23,7 +23,7 @@ $sqlEmployees = "SELECT e.*, d.DepartmentName
                  WHERE e.Name LIKE '%$search%' 
                     OR e.Email LIKE '%$search%' 
                     OR d.DepartmentName LIKE '%$search%'
-                 ORDER BY e.Name ASC";
+                 ORDER BY e.EmployeeID DESC";
 $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_error($dbconn));
 ?>
 
@@ -61,7 +61,7 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
                                     value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                             </div>
                             <button class="btn btn-primary" type="submit">Search</button>
-                            <a class="btn btn-secondary" href="AdminEmployeeManagement.php" style="text-decoration: none;">Reset</a>
+                            <button class="btn btn-secondary" type="button" onclick="window.location.href='AdminEmployeeManagement.php'">Reset</button>
                         </form>
 
                         <div class="table-responsive">
