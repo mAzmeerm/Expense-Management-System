@@ -41,10 +41,13 @@ include("function.php");
                     <br>
                     <label for="Password">Password:</label>
                     <input type="password" id="Password" name="Password" required placeholder="••••••••"> <br>
-            
-                        <label>
-                            <input type="checkbox" onclick="document.getElementById('Password').type =  this.checked ? 'text' : 'password'" style="width : 16px; height:16px;"> Show Password
-                        </label>
+
+                    <label style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
+                        <input type="checkbox"
+                            onclick="document.getElementById('Password').type = this.checked ? 'text' : 'password'"
+                            style="width: 16px; height: 16px; margin: 0 8px 0 0; vertical-align: middle; cursor: pointer;">
+                        <span style="vertical-align: middle;">Show Password</span>
+                    </label>
                     <button class="btn btn-primary" style="width:100%;margin-top:1.2rem;" name="login">Login</button>
                 </form>
             </div>
