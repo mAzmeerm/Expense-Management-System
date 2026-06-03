@@ -24,7 +24,7 @@ $sqlBudget = "SELECT b.*, d.DepartmentName
               WHERE d.DepartmentName LIKE '%$search%'
               OR b.Year LIKE '%$search%'
               OR b.Description LIKE '%$search%'
-              ORDER BY d.DepartmentName ASC";
+              ORDER BY b.BudgetID DESC";
 
 $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($dbconn));
 ?>
@@ -74,6 +74,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>Budget ID</th>
                                         <th>Department</th>
                                         <th>Year</th>
                                         <th>Allocated</th>
@@ -89,6 +90,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                         while ($budget = mysqli_fetch_assoc($budgets)) {
                                             ?>
                                             <tr>
+                                                <td><?= htmlspecialchars($budget['BudgetID']) ?></td>
                                                 <td><?= htmlspecialchars($budget['DepartmentName']) ?></td>
                                                 <td><?= htmlspecialchars($budget['Year']) ?></td>
                                                 <td><?= money($budget['AllocatedAmount']) ?></td>
@@ -101,7 +103,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                     } else {
                                         ?>
                                         <tr>
-                                            <td colspan="6" style="text-align:center;">No budget found.</td>
+                                            <td colspan="7" style="text-align:center;">No budget found.</td>
                                         </tr>
                                         <?php
                                     }
