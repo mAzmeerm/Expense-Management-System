@@ -36,8 +36,10 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 
             <div class="container">
                 <div class="card">
-                    <h2>Admin Submit new Claim</h2>
-                    <p>This is where you can add new claims.</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h2>Admin Submit new Claim</h2>
+                        <a class="btn btn-danger" href="AdminExpenseApproval.php">Back</a>
+                    </div>
                     <label for="Description">Description:</label>
                     <input type="text" id="Description" name="Description">
                     <label for="Amount">Amount:</label>

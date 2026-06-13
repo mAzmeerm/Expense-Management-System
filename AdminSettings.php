@@ -79,6 +79,7 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
                             }
                             ?>
                         </select>
+                        <button class="btn btn-secondary" type="submit" style="margin-top: 15px;">Back</button>
                         <button class="btn btn-primary" type="submit" style="margin-top: 15px;">Save Changes</button>
                         </form>
                     </div>
