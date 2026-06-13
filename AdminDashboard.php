@@ -38,7 +38,6 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
                                  ORDER BY c.ClaimDate DESC LIMIT 5");
 ?>
 <html>
-
 <head>
     <link rel="stylesheet" href="style.css">
     <title>Admin Dashboard</title>
@@ -48,11 +47,11 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
     <div class="layout">
         <?php
         $activePage = 'AdminDashboard.php';
-        include 'AdminSidebar.php'; ?>
+        include 'AdminSidebar.php';
+        ?>
 
         <div class="main-content">
             <?php show_header('Admin Dashboard', $adminName); ?>
-            </header>
 
             <div class="container">
 
@@ -79,52 +78,58 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
 
                     <div class="card">
                         <h3>Approved Spending by Department</h3>
-                        <div class="chart-bars">
-                            <?php foreach ($chart_rows as $row): $h = max(4, ($row['total'] / $max) * 100); ?>
-                                <div class="chart-bar" style="height:<?= $h ?>%">
-                                    <span><?= money($row['total']) ?></span>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="chart-labels">
-                            <?php foreach ($chart_rows as $row): ?>
-                                <div><?= $row['DepartmentName'] ?></div>
-                            <?php endforeach; ?>
+                        <div class="table-responsive">
+                            <div class="chart-bars">
+                                <?php foreach ($chart_rows as $row): $h = max(4, ($row['total'] / $max) * 100); ?>
+                                    <div class="chart-bar" style="height:<?= $h ?>%">
+                                        <span><?= money($row['total']) ?></span>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="chart-labels">
+                                <?php foreach ($chart_rows as $row): ?>
+                                    <div><?= $row['DepartmentName'] ?></div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
+
                     <div class="card">
                         <h3>Recent Claims</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Claim ID</th>
-                                    <th>Employee</th>
-                                    <th>Department</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($r = mysqli_fetch_assoc($recent)): ?>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><?= $r['ClaimID'] ?></td>
-                                        <td><?= $r['Name'] ?></td>
-                                        <td><?= $r['DepartmentName'] ?></td>
-                                        <td><?= $r['CategoryName'] ?></td>
-                                        <td><?= money($r['Amount']) ?></td>
-                                        <td><?= date('Y-m-d', strtotime($r['ClaimDate'])) ?></td>
-                                        <td>
-                                            <span class="badge badge-<?= strtolower($r['Status']) ?>">
-                                                <?= $r['Status'] ?>
-                                            </span>
-                                        </td>
+                                        <th>Claim ID</th>
+                                        <th>Employee</th>
+                                        <th>Department</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
                                     </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php while ($r = mysqli_fetch_assoc($recent)): ?>
+                                        <tr>
+                                            <td><?= $r['ClaimID'] ?></td>
+                                            <td><?= $r['Name'] ?></td>
+                                            <td><?= $r['DepartmentName'] ?></td>
+                                            <td><?= $r['CategoryName'] ?></td>
+                                            <td><?= money($r['Amount']) ?></td>
+                                            <td><?= date('Y-m-d', strtotime($r['ClaimDate'])) ?></td>
+                                            <td>
+                                                <span class="badge badge-<?= strtolower($r['Status']) ?>">
+                                                    <?= $r['Status'] ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
