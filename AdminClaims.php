@@ -15,6 +15,27 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $description = mysqli_real_escape_string($dbconn, $_POST['Description']);
+    $amount = mysqli_real_escape_string($dbconn, $_POST['Amount']);
+    $categoryID = mysqli_real_escape_string($dbconn, $_POST['Category']);
+    $claimDate = mysqli_real_escape_string($dbconn, $_POST['ClaimDate']);
+
+    $sqlInsert = "INSERT INTO expenseclaim (EmployeeID, Description, Amount, CategoryID, ClaimDate, Status) 
+                  VALUES ('$loggedInUser', '$description', '$amount', '$categoryID', '$claimDate', 'Pending')";
+                   set_alert('success','<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Claim submitted successfully.</span>','AdminExpenseApproval.php');
+    
+    if (mysqli_query($dbconn, $sqlInsert)) {
+        $_SESSION['success'] = "Expense claim submitted successfully.";
+        header("Location: AdminExpenseApproval.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Error submitting claim: " . mysqli_error($dbconn);
+        header("Location: AdminClaims.php");
+        exit();
+    }
+}
 ?>
 
 <html>
@@ -27,12 +48,11 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 <body>
     <div class="layout">
         <?php
-        $activePage = 'AdminClaims.php';
         include 'AdminSidebar.php';
         ?>
 
         <div class="main-content">
-            <?php show_header('Admin Claims', $adminName); ?>
+            <?php show_header('Admin Submit Claims', $adminName); ?>
 
             <div class="container">
                 <div class="card">
@@ -40,6 +60,7 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
                         <h2>Admin Submit new Claim</h2>
                         <a class="btn btn-danger" href="AdminExpenseApproval.php">Back</a>
                     </div>
+                    <form method="post" action="AdminClaims.php">
                     <label for="Description">Description:</label>
                     <input type="text" id="Description" name="Description">
                     <label for="Amount">Amount:</label>
@@ -58,6 +79,7 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
                     <label for="ClaimDate">Claim Date:</label>
                     <input type="date" id="ClaimDate" name="ClaimDate">
                     <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Submit Claim</button>
+                    </form>
                 </div>
             </div>
         </div>

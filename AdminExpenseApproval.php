@@ -30,7 +30,7 @@ $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
                  OR cat.CategoryName LIKE '%$search%' 
                  OR c.Status LIKE '%$search%' 
                  OR d.DepartmentName LIKE '%$search%') 
-              ORDER BY c.ClaimDate DESC";
+              ORDER BY c.ClaimID DESC";
 
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
 ?>
