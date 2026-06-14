@@ -104,7 +104,7 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                                         </td>
                                         <td>
                                             <?php if ($claim['Status'] === 'Pending') : ?>
-                                                <form method="post" action="approvalProcess.php" style="display:inline; margin: 0;">
+                                                <form method="post" action="AdminApprovalProcess.php" style="display:inline; margin: 0;">
                                                     <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
                                                     <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
                                                     <button type="submit" name="reject" value="1" class="btn btn-danger" style="margin-left: 4px;">Reject</button>
