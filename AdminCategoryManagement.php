@@ -33,11 +33,12 @@ $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_erro
 
             <div class="mn-content">
                 <div class="container">
+                    <?php show_alert(); ?>
                     <div class="card">
 
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Category Management</h3>
-                            <a href="AdminAddCategory.php" class="btn btn-primary" style="text-decoration:none;">
+                            <a href="AdminCategoryProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
                                 + Add New Category
                             </a>
                         </div>
@@ -65,8 +66,8 @@ $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_erro
                                         <td><?php echo $row['CategoryID']; ?></td>
                                         <td><?php echo $row['CategoryName']; ?></td>
                                         <td>
-                                            <a href="AdminEditCategory.php?id=<?php echo $row['CategoryID']; ?>" class="btn btn-primary">Edit</a>
-                                            <a href="AdminDeleteCategory.php?id=<?php echo $row['CategoryID']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                                            <a href="AdminCategoryProcess.php?action=edit&id=<?php echo $row['CategoryID']; ?>" class="btn btn-primary">Edit</a>
+                                            <a href="AdminCategoryProcess.php?action=delete&id=<?php echo $row['CategoryID']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
