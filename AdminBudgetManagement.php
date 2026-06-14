@@ -43,18 +43,18 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
         include 'AdminSidebar.php';
         ?>
 
-       <div class="main-content">
+        <div class="main-content">
             <?php show_header('Admin Budget Management', $adminName); ?>
             <div class="mn-content">
 
                 <div class="container">
-
+                    <?php show_alert(); ?>
                     <div class="card">
 
                         <div
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Budget Management</h3>
-                            <a href="AdminAddBudget.php" class="btn btn-primary" style="text-decoration:none;">
+                            <a href="AdminBudgetProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
                                 + Add New Budget
                             </a>
                         </div>
@@ -81,6 +81,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                         <th>Spent</th>
                                         <th>Remaining</th>
                                         <th>Description</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
@@ -88,7 +89,7 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                     <?php
                                     if (mysqli_num_rows($budgets) > 0) {
                                         while ($budget = mysqli_fetch_assoc($budgets)) {
-                                            ?>
+                                    ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($budget['BudgetID']) ?></td>
                                                 <td><?= htmlspecialchars($budget['DepartmentName']) ?></td>
@@ -97,15 +98,18 @@ $budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($db
                                                 <td><?= money($budget['SpentAmount']) ?></td>
                                                 <td><?= money($budget['RemainAmount']) ?></td>
                                                 <td><?= htmlspecialchars($budget['Description']) ?></td>
+                                                <td>
+                                                    <a href="AdminBudgetProcess.php?action=edit&BudgetID=<?= $budget['BudgetID'] ?>" class="btn btn-secondary">Edit</a>
+                                                </td>
                                             </tr>
-                                            <?php
+                                        <?php
                                         }
                                     } else {
                                         ?>
                                         <tr>
                                             <td colspan="7" style="text-align:center;">No budget found.</td>
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </tbody>

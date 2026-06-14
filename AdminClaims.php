@@ -24,16 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $sqlInsert = "INSERT INTO expenseclaim (EmployeeID, Description, Amount, CategoryID, ClaimDate, Status) 
                   VALUES ('$loggedInUser', '$description', '$amount', '$categoryID', '$claimDate', 'Pending')";
-                   set_alert('success','<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Claim submitted successfully.</span>','AdminExpenseApproval.php');
     
     if (mysqli_query($dbconn, $sqlInsert)) {
-        $_SESSION['success'] = "Expense claim submitted successfully.";
-        header("Location: AdminExpenseApproval.php");
-        exit();
+        set_alert('success','<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Claim submitted successfully.</span>','AdminExpenseApproval.php');
     } else {
-        $_SESSION['error'] = "Error submitting claim: " . mysqli_error($dbconn);
-        header("Location: AdminClaims.php");
-        exit();
+        set_alert('error','<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error submitting claim: ' . mysqli_error($dbconn) . '</span>','AdminClaims.php');
     }
 }
 ?>
