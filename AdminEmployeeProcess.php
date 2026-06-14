@@ -17,6 +17,18 @@ $titlePage = "Add Employee";
 $employee = [];
 $employeeID = "";
 
+/*employee delete */
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['EmployeeID'])) {
+    $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
+    $sqlDelete = "DELETE FROM employee WHERE EmployeeID = '$employeeID'";
+    if (mysqli_query($dbconn, $sqlDelete)) {
+        set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee deleted successfully.</span>', 'AdminEmployeeManagement.php');
+        exit();
+    } else {
+        set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting employee: ' . mysqli_error($dbconn) . '</span>', 'AdminEmployeeManagement.php');
+        exit();
+    }
+}
 // ==========================================
 // DETECT MODE & CAPTURE DATA UPFRONT
 // ==========================================
