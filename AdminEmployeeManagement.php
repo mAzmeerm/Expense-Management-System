@@ -28,6 +28,7 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
 ?>
 
 <html>
+
 <head>
     <link rel="stylesheet" href="style.css">
     <title>Admin Employee Management</title>
@@ -49,7 +50,7 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
 
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Employee Management</h3>
-                            <a href="AdminAddEmployee.php" class="btn btn-primary" style="text-decoration:none;">
+                            <a href="AdminEmployeeProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
                                 + Add New Employee
                             </a>
                         </div>
@@ -88,15 +89,11 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
                                             <td><?= htmlspecialchars($employee['Role']) ?></td>
                                             <td>
                                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                                    <a href="AdminEditEmployee.php?EmployeeID=<?= $employee['EmployeeID'] ?>"
-                                                       class="btn btn-secondary" style="text-decoration: none;">Edit</a>
-                                                    
-                                                    <form name="EmployeeProcess_<?= $employee['EmployeeID'] ?>" method="post" action="EmployeeProcess.php" style="margin: 0; display: inline;">
-                                                        <input type="hidden" name="EmployeeID" value="<?= $employee['EmployeeID'] ?>">
-                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
-                                                            Delete
-                                                        </button>
-                                                    </form>
+                                                    <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
+                                                        class="btn btn-secondary" style="text-decoration: none;">Edit</a>
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                                        Delete
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
