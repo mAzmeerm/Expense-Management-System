@@ -46,6 +46,7 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
 
             <div class="mn-content">
                 <div class="container">
+                    <?php show_alert(); ?>
                     <div class="card">
 
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -91,9 +92,10 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
                                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                                                     <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
                                                         class="btn btn-secondary" style="text-decoration: none;">Edit</a>
-                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                                    <a href="AdminEmployeeProcess.php?action=delete&EmployeeID=<?= $employee['EmployeeID'] ?>"
+                                                        class="btn btn-danger" style="text-decoration: none;" onclick="return confirm('Are you sure you want to delete this employee?');">
                                                         Delete
-                                                    </button>
+                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
