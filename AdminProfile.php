@@ -47,7 +47,7 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
         ?>
 
         <div class="main-content">
-            <?php show_header('Admin Settings', $adminName); ?>
+            <?php show_header('Admin Profile', $adminName); ?>
 
             <div class="mn-content">
                 <div class="container">
