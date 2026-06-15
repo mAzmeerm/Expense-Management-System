@@ -64,18 +64,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             set_alert('error', 'Error updating employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
         }
     } else {
-        // EXECUTE INSERT TRANSACTION
-        $sqlInsert = "INSERT INTO employee (Name, Email, Password, PhoneNum, DepartmentID, Role) 
+        $sqlCheck = "SELECT Email FROM employee WHERE Email = '$email'";
+        $checkResult = mysqli_query($dbconn, $sqlCheck);
+        if (mysqli_num_rows($checkResult) > 0) {
+            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php');
+           
+        } else {
+            $sqlInsert = "INSERT INTO employee (Name, Email, Password, PhoneNum, DepartmentID, Role) 
                       VALUES ('$name', '$email', '$password', '$phone', '$departmentID', '$role')";
-
         if (mysqli_query($dbconn, $sqlInsert)) {
             set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee added successfully.</span>', 'AdminEmployeeManagement.php');
-            exit();
+            
         } else {
             set_alert('error', 'Error adding employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
-            exit();
+
         }
     }
+}
 }
 ?>
 <html>
@@ -93,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php show_header('Admin Employee Process', $adminName); ?>
             <div class="mn-content">
                 <div class="container">
+                    <?php show_alert(); ?>
                     <div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3><?php echo $titlePage; ?></h3>
@@ -108,6 +114,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="email" id="email" name="email" required>
                                 <label for="password">Password:</label>
                                 <input type="password" id="password" name="password" required>
+                                <label style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
+                                    <input type="checkbox"
+                                        onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"
+                                        style="width: 16px; height: 16px; margin: 0 8px 0 0; vertical-align: middle; cursor: pointer;">
+                                    <span style="vertical-align: middle;">Show Password</span>
+                                </label>
                                 <label for="phone">Phone Number:</label>
                                 <input type="text" id="phone" name="phone" required>
 

@@ -54,11 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <form method="post" action="AdminClaims.php">
                     <label for="Description">Description:</label>
-                    <input type="text" id="Description" name="Description">
+                    <input type="text" id="Description" name="Description" required>
                     <label for="Amount">Amount:</label>
-                    <input type="number" id="Amount" name="Amount" step="0.01">
+                    <input type="number" id="Amount" name="Amount" step="0.01" required>
                     <label for="Category">Category:</label>
-                    <select id="Category" name="Category">
+                    <select id="Category" name="Category" required>
                         <option value="">Select a category</option>
                         <?php
                         $sqlCategory = "SELECT * FROM expensecategory ORDER BY CategoryName ASC";
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ?>
                     </select>
                     <label for="ClaimDate">Claim Date:</label>
-                    <input type="date" id="ClaimDate" name="ClaimDate">
+                    <input type="date" id="ClaimDate" name="ClaimDate" required>
                     <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Submit Claim</button>
                     </form>
                 </div>

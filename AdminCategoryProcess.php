@@ -24,10 +24,10 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     $sqlDelete = "DELETE FROM expensecategory WHERE CategoryID = '$categoryID'";
     if (mysqli_query($dbconn, $sqlDelete)) {
         set_alert('error', '<span class="menu-item-wrapper"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Category deleted successfully.</span>', 'AdminCategoryManagement.php');
-        exit();
+        
     } else {
         set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting category: ' . mysqli_error($dbconn) . '</span>', 'AdminCategoryManagement.php');
-        exit();
+       
     }
 }
 
@@ -52,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sqlUpdate = "UPDATE expensecategory SET CategoryName = '$categoryName' WHERE CategoryID = '$categoryID'";
         if (mysqli_query($dbconn, $sqlUpdate)) {
             set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Category updated successfully.</span>', 'AdminCategoryManagement.php');
-            exit();
+            
         } else {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error updating category: ' . mysqli_error($dbconn) . '</span>', 'AdminCategoryManagement.php');
-            exit();
+            
         }
     } else {
         $sqlCheck = "SELECT CategoryID FROM expensecategory WHERE CategoryName = '$categoryName'";
@@ -63,15 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (mysqli_num_rows($checkResult) > 0) {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Category "' . htmlspecialchars($categoryName) . '" already exists!</span>', 'AdminCategoryManagement.php');
-            exit();
         } else {
             $sqlInsert = "INSERT INTO expensecategory (CategoryName) VALUES ('$categoryName')";
             if (mysqli_query($dbconn, $sqlInsert)) {
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Category added successfully.</span>', 'AdminCategoryManagement.php');
-                exit();
             } else {
                 set_alert('error', 'Error adding category: ' . mysqli_error($dbconn), 'AdminCategoryManagement.php');
-                exit();
             }
         }
     }
