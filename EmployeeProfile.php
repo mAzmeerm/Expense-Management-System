@@ -8,6 +8,7 @@ if (!isset($_SESSION['UserID']) || $_SESSION['UserID'] === '') {
     header("Location: login.php");
     exit();
 }
+//test test
 
 // Query to look up this specific employee
 $sql = "SELECT e.*, d.DepartmentName 
