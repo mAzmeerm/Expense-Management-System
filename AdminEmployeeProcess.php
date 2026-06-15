@@ -2,7 +2,7 @@
 session_start();
 include("dbconn.php");
 include("function.php");
-
+require_login();
 $loggedInUser = $_SESSION['UserID'];
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
@@ -29,9 +29,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
         exit();
     }
 }
-// ==========================================
-// DETECT MODE & CAPTURE DATA UPFRONT
-// ==========================================
 if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['EmployeeID'])) {
     $isEditMode = true;
     $titlePage = "Edit Employee";
@@ -66,10 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (mysqli_query($dbconn, $sqlUpdate)) {
             set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee updated successfully.</span>', 'AdminEmployeeManagement.php');
-            exit();
         } else {
             set_alert('error', 'Error updating employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
-            exit();
         }
     } else {
         // EXECUTE INSERT TRANSACTION

@@ -1,4 +1,8 @@
 <?php
+session_start();
+include("dbconn.php");
+include("function.php");
+require_login();
 $navItems = [
     'AdminDashboard.php' => '<span class="menu-item-wrapper"><img src="IconDashboard.svg" alt="Dashboard" width="20" height="20" style="margin-right: 5px;"> Dashboard</span>',
     'AdminExpenseApproval.php' => '<span class="menu-item-wrapper"><img src="IconApproval.svg" alt="Expense Approval" width="20" height="20" style="margin-right: 5px;">Expense Approval</span>',
@@ -6,7 +10,7 @@ $navItems = [
     'AdminEmployeeManagement.php' => '<span class="menu-item-wrapper"><img src="IconEmployee.svg" alt="Employee Directory" width="20" height="20" style="margin-right: 5px;">Employee Directory</span>',
     'AdminCategoryManagement.php' => '<span class="menu-item-wrapper"><img src="IconCategory.svg" alt="Category Management" width="20" height="20" style="margin-right: 5px;">Category Management</span>',
     'AdminDepartmentManagement.php' => '<span class="menu-item-wrapper"><img src="IconDepartment.svg" alt="Department Management" width="20" height="20" style="margin-right: 5px;">Department Management</span>',
-    'AdminSettings.php' => '<span class="menu-item-wrapper"><img src="IconSetting.svg" alt="Settings" width="20" height="20" style="margin-right: 5px;"> Settings</span>',
+    'AdminProfile.php' => '<span class="menu-item-wrapper"><img src="IconProfile.svg" alt="Settings" width="20" height="20" style="margin-right: 5px;"> Profile </span>',
     'logout.php' => '<span class="menu-item-wrapper"><img src="IconLogOut.svg" alt="Logout" width="20" height="20" style="margin-right: 5px;"> Logout</span>',
 ];
 ?>
