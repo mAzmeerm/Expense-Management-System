@@ -20,7 +20,7 @@ include("function.php");
             <div class="card login-card">
                 <h1>Welcome Back!</h1>
                 <p style="color:#64748b;margin:8px 0 20px;">Sign in to continue</p>
-                <form action="loginprocess.php" method="post">
+                <form action="loginProcess.php" method="post">
                     <?php show_alert(); ?>
                     <label for="Login">Login as:</label> <br>
                     <div style="display: flex; gap: 24px; margin-top: .5rem; align-items: center;">

@@ -2,7 +2,7 @@
 session_start();
 include("dbconn.php");
 include("function.php");
-
+require_login();
 $loggedInUser = $_SESSION['UserID'];
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
@@ -29,9 +29,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
         exit();
     }
 }
-// ==========================================
-// DETECT MODE & CAPTURE DATA UPFRONT
-// ==========================================
 if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['EmployeeID'])) {
     $isEditMode = true;
     $titlePage = "Edit Employee";

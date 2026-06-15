@@ -2,11 +2,8 @@
 session_start();
 include("dbconn.php");
 include("function.php");
+require_login();
 $loggedInUser = $_SESSION['UserID'];
-if ($loggedInUser == '' or !isset($loggedInUser)) {
-    header("Location: login.php");
-    exit();
-}
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: "
     . mysqli_error($dbconn));

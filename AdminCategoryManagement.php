@@ -2,6 +2,7 @@
 session_start();
 include("dbconn.php");
 include("function.php");
+require_login();
 $loggedInUser = $_SESSION['UserID'];
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
@@ -17,10 +18,12 @@ $sqlCategory = "SELECT * FROM expensecategory WHERE CategoryName LIKE '%$search%
 $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_error($dbconn));
 ?>
 <html>
+
 <head>
     <link rel="stylesheet" href="style.css">
     <title>Admin Category Management</title>
 </head>
+
 <body>
     <div class="layout">
         <?php
@@ -72,4 +75,5 @@ $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_erro
                                     </tr>
                                 <?php } ?>
                             </tbody>
+
 </html>

@@ -2,7 +2,7 @@
 session_start();
 include("dbconn.php");
 include("function.php");
-
+require_login();
 // Get the ClaimID and force it to be an integer for absolute safety
 $claimID = (int)$_REQUEST["ClaimID"];
 
