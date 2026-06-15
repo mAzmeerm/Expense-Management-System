@@ -9,20 +9,8 @@ $loggedInUser = $_SESSION['UserID'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $phone = mysqli_real_escape_string($dbconn, $_POST['phone']);
-    $email = mysqli_real_escape_string($dbconn, $_POST['email']);
-    $newPassword = $_POST['password'];
+   
 
-
-    if (!empty($newPassword)) {
-        $password = mysqli_real_escape_string($dbconn, $newPassword);
-        $sqlUpdate = "UPDATE employee 
-                      SET Name='$name', PhoneNum='$phone', Email='$email', Password='$password' 
-                      WHERE EmployeeID='$loggedInUser'";
-    } else {
-        $sqlUpdate = "UPDATE employee 
-                      SET Name='$name', PhoneNum='$phone', Email='$email' 
-                      WHERE EmployeeID='$loggedInUser'";
-    }
 
     if (mysqli_query($dbconn, $sqlUpdate)) {
         set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Profile updated successfully.</span>', 'EmployeeProfile.php');

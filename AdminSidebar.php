@@ -1,8 +1,4 @@
 <?php
-session_start();
-include("dbconn.php");
-include("function.php");
-require_login();
 $navItems = [
     'AdminDashboard.php' => '<span class="menu-item-wrapper"><img src="IconDashboard.svg" alt="Dashboard" width="20" height="20" style="margin-right: 5px;"> Dashboard</span>',
     'AdminExpenseApproval.php' => '<span class="menu-item-wrapper"><img src="IconApproval.svg" alt="Expense Approval" width="20" height="20" style="margin-right: 5px;">Expense Approval</span>',

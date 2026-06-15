@@ -55,15 +55,13 @@ if ($row = mysqli_fetch_assoc($query)) {
                             <h3>My Profile</h3>
                         </div>
 
-                        <form method="post" action="EmployeeProfileProcess.php">
-
                             <label for="name">Name:</label>
                             <input type="text" id="name" name="name"
-                                value="<?php echo htmlspecialchars($employeeName); ?>" required>
+                                value="<?php echo htmlspecialchars($employeeName); ?>" disabled>
 
                             <label for="phone">Phone Number:</label>
                             <input type="text" id="phone" name="phone"
-                                value="<?php echo htmlspecialchars($employeePhone); ?>" required>
+                                value="<?php echo htmlspecialchars($employeePhone); ?>" disabled>
 
                             <label>Email:</label>
                             <input type="email" value="<?php echo htmlspecialchars($employeeEmail); ?>" disabled
@@ -77,9 +75,8 @@ if ($row = mysqli_fetch_assoc($query)) {
                             <input type="text" value="<?php echo htmlspecialchars($employeeRole); ?>" disabled
                                 style="background:#f4f4f4;">
 
-                            <button type="submit" class="btn btn-primary" style="margin-top: 15px; width: 100%;">Save
-                                Changes</button>
-                        </form>
+                           
+                        
                     </div>
                 </div>
             </div>
