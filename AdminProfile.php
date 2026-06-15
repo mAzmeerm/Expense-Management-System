@@ -37,12 +37,12 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>Admin Settings</title>
+    <title>Admin Profile</title>
 </head>
 <body>
     <div class="layout">
         <?php
-        $activePage = 'AdminSettings.php';
+        $activePage = 'AdminProfile.php';
         include 'AdminSidebar.php';
         ?>
 
@@ -52,9 +52,9 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
             <div class="mn-content">
                 <div class="container">
                     <div class="card">
-                        <h3>Admin Settings</h3>
-                        <p>Here you can manage your account profile.</p>
-                        <form method="post" action="AdminUpdateProfile.php">
+                        <h3>Admin Profile</h3>
+                        <p>Manage your account profile.</p>
+                        <form method="post" action="AdminProfileProcess.php">
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($adminName); ?>">
                         <label for="phone">Phone:</label>
@@ -63,11 +63,8 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
                         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($adminEmail); ?>">
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" placeholder="Enter new password">
-                        <label for="role">Role: </label>
-                        <select id="role" name="role">
-                            <option value="Admin" <?php if ($adminRole == 'Admin') echo 'selected'; ?>>Admin</option>
-                            <option value="Employee" <?php if ($adminRole == 'Employee') echo 'selected'; ?>>Employee</option>
-                        </select>
+
+            
                         <label for="department">Department: </label>
                         <select id="department" name="department">
                             <?php
@@ -79,8 +76,7 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
                             }
                             ?>
                         </select>
-                        <button class="btn btn-secondary" type="submit" style="margin-top: 15px;">Back</button>
-                        <button class="btn btn-primary" type="submit" style="margin-top: 15px;">Save Changes</button>
+                        <a href="AdminProfileProcess.php?action=update" class="btn btn-primary" type="submit" style="margin-top: 15px;">Save Changes</a>
                         </form>
                     </div>
                 </div>
