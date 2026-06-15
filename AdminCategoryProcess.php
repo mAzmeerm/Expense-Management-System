@@ -21,7 +21,6 @@ $row = ['CategoryName' => ''];
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $categoryID = mysqli_real_escape_string($dbconn, $_GET['id']);
 
-    // Dibetulkan: Guna nama table 'expensecategory' ikut ERD
     $sqlDelete = "DELETE FROM expensecategory WHERE CategoryID = '$categoryID'";
     if (mysqli_query($dbconn, $sqlDelete)) {
         set_alert('error', '<span class="menu-item-wrapper"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Category deleted successfully.</span>', 'AdminCategoryManagement.php');

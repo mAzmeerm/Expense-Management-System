@@ -22,13 +22,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
     $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
     $sqlDelete = "DELETE FROM employee WHERE EmployeeID = '$employeeID'";
     if (mysqli_query($dbconn, $sqlDelete)) {
-        set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee deleted successfully.</span>', 'AdminEmployeeManagement.php');
-        exit();
+        set_alert('error', '<span class="menu-item-wrapper"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee deleted successfully.</span>', 'AdminEmployeeManagement.php');
     } else {
         set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting employee: ' . mysqli_error($dbconn) . '</span>', 'AdminEmployeeManagement.php');
-        exit();
     }
 }
+/*employee update */
 if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['EmployeeID'])) {
     $isEditMode = true;
     $titlePage = "Edit Employee";
@@ -44,9 +43,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['Emplo
     }
 }
 
-// ==========================================
-// PROCESS FORM SUBMISSIONS (POST)
-// ==========================================
+//
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $email = mysqli_real_escape_string($dbconn, $_POST['email']);
