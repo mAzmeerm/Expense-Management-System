@@ -2,12 +2,9 @@
 session_start();
 include("dbconn.php");
 include("function.php");
+require_login();
 $loggedInUser = $_SESSION['UserID'];
 
-if ($loggedInUser == '' or !isset($loggedInUser)) {
-    header("Location: login.php");
-    exit();
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);

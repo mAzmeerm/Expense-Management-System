@@ -24,7 +24,7 @@ if (isset($_POST['submit_claim'])) {
 
     // 3. Check if it worked and show alert
     if ($query) {
-        set_alert('success', 'Your claim has been submitted successfully.', 'EmployeeSubmitClaim.php');
+        set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;">Your claim has been submitted successfully. </span>', 'EmployeeSubmitClaim.php');
     } else {
         set_alert('error', 'Failed to submit claim. Please try again.', 'EmployeeSubmitClaim.php');
     }
@@ -34,7 +34,6 @@ if (isset($_POST['submit_claim'])) {
 $sqlCategories = "SELECT * FROM expensecategory ORDER BY CategoryName ASC";
 $categories = mysqli_query($dbconn, $sqlCategories) or die("Error: " . mysqli_error($dbconn));
 ?>
-<!DOCTYPE html>
 <html>
 
 <head>
