@@ -19,46 +19,50 @@ if (!$row) {
 
         if (isset($_POST['approve'])) {
 
-            $claimamount = "SELECT c.Amount
-                              FROM ExpenseClaim c 
-                              WHERE c.ClaimID = $claimID";
-
-            $result = mysqli_query($dbconn, $claimamount) or die("Error fetching amounts: " . mysqli_error($dbconn));
+            // 1. Fetch the claim amount safely
+            $claimamount_query = "SELECT c.Amount FROM ExpenseClaim c WHERE c.ClaimID = $claimID";
+            $result = mysqli_query($dbconn, $claimamount_query) or die("Error fetching amounts: " . mysqli_error($dbconn));
             $rowAmounts = mysqli_fetch_assoc($result);
 
             if ($rowAmounts) {
                 $claimamount = $rowAmounts['Amount'];
+            } else {
+                $claimamount = 0;
             }
 
-            $remainBudgetResult = mysqli_query($dbconn, "SELECT RemainAmount 
-                                                         FROM Budget b 
-                                                         JOIN Employee e ON b.DepartmentID = e.DepartmentID
-                                                         JOIN ExpenseClaim c ON e.EmployeeID = c.EmployeeID 
-                                                         WHERE c.ClaimID = $claimID") or die("Error fetching remaining budget: " . mysqli_error($dbconn));
+            // 2. Fetch remaining budget (FIXED: Changed c.Date to c.ClaimDate based on your ERD)
+            $remainBudgetResult = mysqli_query($dbconn, "SELECT b.RemainAmount FROM Budget b 
+                                                JOIN Employee e ON b.DepartmentID = e.DepartmentID 
+                                                JOIN ExpenseClaim c ON e.EmployeeID = c.EmployeeID 
+                                                WHERE c.ClaimID = $claimID 
+                                                AND b.Year = YEAR(c.ClaimDate)") or die("Error fetching remaining budget: " . mysqli_error($dbconn));
             $remainBudgetRow = mysqli_fetch_assoc($remainBudgetResult);
 
-            //update budget and approve is request balance is sufficient
-            if ($claimamount > $remainBudgetRow['RemainAmount']) {
+            // FIXES BUG 2: Check if a matching budget row actually exists in the database first
+            if (!$remainBudgetRow) {
+                set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Operational Block: No budget has been created for this department for this year yet.</span>', 'AdminExpenseApproval.php');
+            }
+            // 3. Update budget and approve if requested balance is sufficient
+            else if ($claimamount > $remainBudgetRow['RemainAmount']) {
                 $sqlstatus = "UPDATE ExpenseClaim SET Status='Rejected' WHERE ClaimID = $claimID";
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
                 set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Auto-rejected this claim. Insufficient remaining department budget.</span>', 'AdminExpenseApproval.php');
             } else {
-                // 2. Updated JOIN query (Removed quotes around $claimID at the end)
+                // FIXED: Changed c.Date to c.ClaimDate in the JOIN processing update query
                 $budgetsql = "UPDATE Budget b 
-                                JOIN Employee e ON b.DepartmentID = e.DepartmentID
-                                JOIN ExpenseClaim c ON e.EmployeeID = c.EmployeeID
-                                SET b.SpentAmount = b.SpentAmount + c.Amount,
-                                b.RemainAmount = b.RemainAmount - c.Amount
-                                 WHERE c.ClaimID = $claimID";
+                      JOIN Employee e ON b.DepartmentID = e.DepartmentID
+                      JOIN ExpenseClaim c ON e.EmployeeID = c.EmployeeID
+                      SET b.SpentAmount = b.SpentAmount + c.Amount,
+                          b.RemainAmount = b.RemainAmount - c.Amount
+                      WHERE c.ClaimID = $claimID AND b.Year = YEAR(c.ClaimDate)";
 
                 mysqli_query($dbconn, $budgetsql) or die("Error updating budget: " . mysqli_error($dbconn));
 
-                // 3. Updated status query (Removed quotes around $claimID)
-                $sqlstatus = "UPDATE ExpenseClaim 
-                              SET Status='Approved' WHERE ClaimID = $claimID";
+                // Update status query
+                $sqlstatus = "UPDATE ExpenseClaim SET Status='Approved' WHERE ClaimID = $claimID";
                 mysqli_query($dbconn, $sqlstatus) or die("Error updating claim status: " . mysqli_error($dbconn));
 
-                //approval message
+                // Approval message success
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Claim approved successfully.</span>', 'AdminExpenseApproval.php');
             }
         } else if (isset($_POST['reject'])) {
@@ -69,3 +73,4 @@ if (!$row) {
         }
     }
 }
+?>

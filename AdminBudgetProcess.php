@@ -47,21 +47,29 @@ if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['BudgetI
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error updating budget: ' . mysqli_error($dbconn) . '</span>', 'AdminBudgetManagement.php');
         }
     }
-}
-else {
+} else {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $year = mysqli_real_escape_string($dbconn, $_POST['Year']);
         $departmentID = mysqli_real_escape_string($dbconn, $_POST['DepartmentID']);
         $allocatedAmount = mysqli_real_escape_string($dbconn, $_POST['Amount']);
         $description = mysqli_real_escape_string($dbconn, $_POST['Description']);
-
-        $sqlInsert = "INSERT INTO budget (DepartmentID, Year, AllocatedAmount, SpentAmount, RemainAmount, Description) 
-                      VALUES ('$departmentID', '$year', '$allocatedAmount', 0, '$allocatedAmount', '$description')";
-        
-        if (mysqli_query($dbconn, $sqlInsert)) {
-            set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Budget created successfully.</span>', 'AdminBudgetManagement.php');
+        $sqlCheck = "SELECT b.BudgetID, d.DepartmentName, b.Year 
+                    FROM Budget b
+                    JOIN Department d ON b.DepartmentID = d.DepartmentID
+                    WHERE d.DepartmentID = $departmentID AND b.Year = $year;";
+        $checkResult = mysqli_query($dbconn, $sqlCheck);
+        if (mysqli_num_rows($checkResult) > 0) {
+            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">That Department Name and Year already exists!</span>', 'AdminBudgetManagement.php');
         } else {
-            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error creating budget: ' . mysqli_error($dbconn) . '</span>', 'AdminBudgetManagement.php');
+
+            $sqlInsert = "INSERT INTO budget (DepartmentID, Year, AllocatedAmount, SpentAmount, RemainAmount, Description) 
+                      VALUES ('$departmentID', '$year', '$allocatedAmount', 0, '$allocatedAmount', '$description')";
+
+            if (mysqli_query($dbconn, $sqlInsert)) {
+                set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Budget created successfully.</span>', 'AdminBudgetManagement.php');
+            } else {
+                set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error creating budget: ' . mysqli_error($dbconn) . '</span>', 'AdminBudgetManagement.php');
+            }
         }
     }
 }
