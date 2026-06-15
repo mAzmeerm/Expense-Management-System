@@ -4,8 +4,8 @@ include("dbconn.php");
 include("function.php");
 
 if (isset($_POST['login'])) {
-    $email = mysqli_real_escape_string($dbconn, $_POST['Email']);
-    $password = $_POST['Password'];
+    $email    = mysqli_real_escape_string($dbconn, $_POST['email']);
+    $password = mysqli_real_escape_string($dbconn, $_POST['password']);
     $role = mysqli_real_escape_string($dbconn, $_POST['role']);
     $sql = "SELECT * FROM employee WHERE Email='$email' AND Role='$role' AND Password='$password'";
     $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
