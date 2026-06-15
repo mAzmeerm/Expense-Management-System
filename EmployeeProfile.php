@@ -2,15 +2,9 @@
 session_start();
 include("dbconn.php");
 include("function.php");
+require_login();
 $loggedInUser = $_SESSION['UserID'];
-
-if (!isset($_SESSION['UserID']) || $_SESSION['UserID'] === '') {
-    header("Location: login.php");
-    exit();
-}
-//test test
-
-// Query to look up this specific employee
+// 
 $sql = "SELECT e.*, d.DepartmentName 
         FROM employee e 
         JOIN department d ON e.DepartmentID = d.DepartmentID 
