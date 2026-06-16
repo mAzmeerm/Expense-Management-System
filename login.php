@@ -55,7 +55,7 @@ include("function.php");
                     </div>
 
                     <script src="script.js"></script>
-                    <button class="btn btn-primary" style="width:100%;margin-top:1.2rem;" name="login">Login</button>
+                    <button class="btn btn-login" style="width:100%;margin-top:1.2rem;" name="login">Login</button>
                 </form>
             </div>
         </div>

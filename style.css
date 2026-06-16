@@ -122,7 +122,7 @@ textarea {
   border: none;
   font-size: 0.9rem;
 }
-.btn-primary {
+.btn-login {
   display: block;
   width: 100%;
   max-width: 280px;      
@@ -138,15 +138,19 @@ textarea {
   box-shadow: 0 4px 12px rgba(11, 79, 138, 0.2); 
   transition: all 0.2s ease;
 }
-.btn-primary:hover {
+.btn-login:hover {
   filter: brightness(1.1);
   transform: translateY(-1px); 
   box-shadow: 0 6px 16px rgba(11, 79, 138, 0.3);
 }
 
-.btn-primary:active {
+.btn-login:active {
   transform: translateY(1px);  
   box-shadow: 0 2px 6px rgba(11, 79, 138, 0.2);
+}
+  .btn-primary {
+  background: var(--color-primary);
+  color: #fff;
 }
 .btn-success {
   background: var(--green);
