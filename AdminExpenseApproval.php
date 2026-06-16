@@ -37,6 +37,7 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
 
 
 <html>
+
 <head>
     <link rel="stylesheet" href="style.css">
     <title>Admin Expense Approval</title>
@@ -54,7 +55,7 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
 
             <div class="container">
                 <?php show_alert(); ?>
-                
+
                 <div class="card">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                         <h3>Expense Approval</h3>
@@ -62,7 +63,7 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                             + Add New Claims
                         </a>
                     </div>
-                    
+
                     <form class="searchbar" method="get">
                         <div style="flex: 1;">
                             <label style="margin-top: 0;">Search claims:</label>
@@ -71,53 +72,68 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none;">Reset</a>
                     </form>
-                    
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Claim ID</th>
-                                    <th>Employee</th>
-                                    <th>Department</th>
-                                    <th>Category</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($claim = mysqli_fetch_assoc($claims)) : ?>
+                    <!-- dropdown status filter -->
+                    <select id="statusFilter" name="statusFilter" onchange="window.location.href='?statusFilter=' + this.value;">
+                        <?php
+                        $sqlStatus = "SELECT DISTINCTstatus FROM expenseclaim ORDER BY status ASC";
+                        $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " . mysqli_error($dbconn));
+
+                        while ($rowStatus = mysqli_fetch_assoc($queryStatus)) {
+                            if ($rowStatus['status'] == $selectedStatus) {
+                                $selected = 'selected';
+                            } else {
+                                $selected = '';
+                            }
+                            echo "<option value='" . $rowStatus['status'] . "' $selected>" . $rowStatus['status'] . "</option>";
+                        }
+                        ?>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><?= htmlspecialchars($claim['ClaimID']) ?></td>
-                                        <td><?= htmlspecialchars($claim['Name']) ?></td>
-                                        <td><?= htmlspecialchars($claim['DepartmentName']) ?></td>
-                                        <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
-                                        <td><?= htmlspecialchars($claim['Description']) ?></td>
-                                        <td><?= money($claim['Amount']) ?></td>
-                                        <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
-                                        <td>
-                                            <span class="badge badge-<?= strtolower($claim['Status']) ?>">
-                                                <?= htmlspecialchars($claim['Status']) ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <?php if ($claim['Status'] === 'Pending') : ?>
-                                                <form method="post" action="AdminApprovalProcess.php" style="display:inline; margin: 0;">
-                                                    <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
-                                                    <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
-                                                    <button type="submit" name="reject" value="1" class="btn btn-danger" style="margin-left: 4px;">Reject</button>
-                                                </form>
-                                            <?php elseif ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected') : ?>
-                                                <span style="color: #888;">-</span>
-                                            <?php endif; ?>
-                                        </td>
+                                        <th>Claim ID</th>
+                                        <th>Employee</th>
+                                        <th>Department</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    <?php while ($claim = mysqli_fetch_assoc($claims)) : ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($claim['ClaimID']) ?></td>
+                                            <td><?= htmlspecialchars($claim['Name']) ?></td>
+                                            <td><?= htmlspecialchars($claim['DepartmentName']) ?></td>
+                                            <td><?= htmlspecialchars($claim['CategoryName']) ?></td>
+                                            <td><?= htmlspecialchars($claim['Description']) ?></td>
+                                            <td><?= money($claim['Amount']) ?></td>
+                                            <td><?= date('Y-m-d', strtotime($claim['ClaimDate'])) ?></td>
+                                            <td>
+                                                <span class="badge badge-<?= strtolower($claim['Status']) ?>">
+                                                    <?= htmlspecialchars($claim['Status']) ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <?php if ($claim['Status'] === 'Pending') : ?>
+                                                    <form method="post" action="AdminApprovalProcess.php" style="display:inline; margin: 0;">
+                                                        <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
+                                                        <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
+                                                        <button type="submit" name="reject" value="1" class="btn btn-danger" style="margin-left: 4px;">Reject</button>
+                                                    </form>
+                                                <?php elseif ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected') : ?>
+                                                    <span style="color: #888;">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
+                        </div>
                 </div>
             </div>
         </div>

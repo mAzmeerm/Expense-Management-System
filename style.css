@@ -29,7 +29,8 @@ header {
   gap: 1rem;
 }
 body {
-  font-family: Arial, Helvetica, sans-serif, Helvetica, sans-serif;
+
+  font-family: sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
@@ -38,7 +39,7 @@ a {
   color: inherit;
 }
 label {
-  display: block;
+   display: block;
   margin-top: 0.85rem;
   font-weight: 600;
   color: #374151;
@@ -85,6 +86,7 @@ textarea {
   max-width: 100%;
   padding: 1.6rem;
 }
+
 
 /* Alert styles */
 .alert {
@@ -190,7 +192,44 @@ textarea {
   width: 100%;
   max-width: 430px;
 }
-
+.input-box {
+  position: relative;
+  width: 250px;
+  height: 45px;
+  margin: 10px 0;
+}
+.login-input {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding:12px;
+  background-color :transparent;
+  border: 2px solid #1d82bd;
+  outline: none;
+  color : white;
+  font-size: 16px;
+  border-radius: 8px;
+}
+.login-label {
+  all: unset;
+  display: block;
+  font-size:16px;
+  font-weight: normal;
+  position: absolute;
+  left : 12px;
+  top : 12px;
+  color : #94a3b8;
+  pointer-events: none;
+  transition: 0.3s ;
+  background-color: white;
+  padding: 0 5px;
+} 
+.login-input:focus + .login-label,
+.login-input:valid+ .login-label{
+  top: -8px;
+  font-size : 16px;
+  color: #38bdf8;
+}
 /*sidebar styles */
 .sidebar {
   width: 245px;

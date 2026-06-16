@@ -35,19 +35,14 @@ include("function.php");
                             </span>
                         </label>
                     </div>
-                    <br>
-                    <label for="Email">Email:</label>
-                    <input type="email" id="Email" name="Email" required placeholder="example@gmail.com">
-                    <br>
-                    <label for="Password">Password:</label>
-                    <input type="password" id="Password" name="Password" required placeholder="••••••••"> <br>
-
-                    <label style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
-                        <input type="checkbox"
-                            onclick="document.getElementById('Password').type = this.checked ? 'text' : 'password'"
-                            style="width: 16px; height: 16px; margin: 0 8px 0 0; vertical-align: middle; cursor: pointer;">
-                        <span style="vertical-align: middle;">Show Password</span>
-                    </label>
+                    <div class="input-box" style="margin-top: 25px">
+                        <input class="login-input" type="email" id="Email" name="Email" required>
+                        <label for="Email" class="login-label">Email</label>
+                    </div>
+                    <div class="input-box" style="margin-top: 25px">
+                        <input class="login-input" type="password" id="Password" name="Password" required>
+                        <label for="Password" class="login-label">Password</label>
+                    </div>
                     <button class="btn btn-primary" style="width:100%;margin-top:1.2rem;" name="login">Login</button>
                 </form>
             </div>

@@ -76,11 +76,11 @@ $categories = mysqli_query($dbconn, $sqlCategories) or die("Error: " . mysqli_er
                             <option value="" disabled selected>Select Category</option>
                             <?php
                             while ($categoryRow = mysqli_fetch_assoc($categories)) {
-                                ?>
+                            ?>
                                 <option value="<?= $categoryRow['CategoryID'] ?>">
                                     <?= htmlspecialchars($categoryRow['CategoryName']) ?>
                                 </option>
-                                <?php
+                            <?php
                             }
                             ?>
                         </select>
