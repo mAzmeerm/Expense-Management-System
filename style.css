@@ -205,7 +205,7 @@ textarea {
   width: 100%;
   padding:12px;
   background-color :transparent;
-  border: 2px solid #1d82bd;
+  border: 1px solid #535759;
   outline: none;
   color : var(--color-text);
   font-size: 16px;
@@ -228,8 +228,8 @@ textarea {
 .login-input:focus + .login-label,
 .login-input:valid+ .login-label{
   top: -8px;
-  font-size : 16px;
-  color: #38bdf8;
+  font-size : 14px;
+  color: #232728;
 }
 .password-container {
   position: relative;
