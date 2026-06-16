@@ -18,21 +18,26 @@ include("function.php");
         </div>
         <div class="login-panel">
             <div class="card login-card">
-                <h1>Welcome Back!</h1>
-                <p style="color:#64748b;margin:8px 0 20px;">Sign in to continue</p>
+                <div class="login-header" style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--color-nav); margin-bottom: 0.25rem;">
+                        Expense Claims Portal
+                    </h2>
+                    <p style="font-size: 0.95rem; color: var(--color-muted); margin: 0;">
+                        Secure Employee & Admin Claims
+                    </p>
+                </div>
                 <form action="loginProcess.php" method="post">
                     <?php show_alert(); ?>
-                    <label for="Login">Login as:</label>
                     <div style="display: flex; gap: 24px; margin-top: .5rem; align-items: center; justify-content: center; width: 100%;">
 
-                        <label style="margin-top: 20px; font-weight: normal; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label style="margin-bottom: 10px; margin-top: 5px; font-weight: normal; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <span class="menu-item-wrapper" style="display: inline-flex; align-items: center;">
                                 <input type="radio" name="role" value="Staff" checked style="width: auto; margin: 0;">
                                 <img src="IconEmployee2.svg" alt="Employee" width="16" height="16" style="margin-right: 3px;">Employee
                             </span>
                         </label>
 
-                        <label style="margin-top: 20px; font-weight: normal; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <label style=" margin-bottom: 10px; margin-top: 5px; font-weight: normal; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <span class="menu-item-wrapper" style="display: inline-flex; align-items: center;">
                                 <input type="radio" name="role" value="Admin" style="width: auto; margin: 0;">
                                 <img src="IconAdmin.svg" alt="Admin" width="16" height="16" style="margin-right: 3px;">Admin

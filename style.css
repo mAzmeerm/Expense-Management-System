@@ -123,8 +123,30 @@ textarea {
   font-size: 0.9rem;
 }
 .btn-primary {
-  background: var(--color-primary);
-  color: #fff;
+  display: block;
+  width: 100%;
+  max-width: 280px;      
+  margin: 20px auto 0;   
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #0b4f8a, #1d82bd); 
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;    
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(11, 79, 138, 0.2); 
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px); 
+  box-shadow: 0 6px 16px rgba(11, 79, 138, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);  
+  box-shadow: 0 2px 6px rgba(11, 79, 138, 0.2);
 }
 .btn-success {
   background: var(--green);
