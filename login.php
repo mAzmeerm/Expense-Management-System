@@ -14,7 +14,7 @@ include("function.php");
     <div class="login-wrapper">
         <div class="login-brand">
             <img src="logo.png" alt="AdadasSport Logo" width="200" height="200">
-            <p>AdadasSport Expense Management System</p>
+            <p style="font-family: 'Playfair Display', serif;font-style: italic;font-size: 1.85rem;color: white;">AdadasSport Expense Management System</p>
         </div>
         <div class="login-panel">
             <div class="card login-card">
