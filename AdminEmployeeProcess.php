@@ -3,6 +3,7 @@ session_start();
 include("dbconn.php");
 include("function.php");
 require_login();
+
 $loggedInUser = $_SESSION['UserID'];
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
@@ -17,7 +18,26 @@ $titlePage = "Add Employee";
 $employee = [];
 $employeeID = "";
 
-/*employee delete */
+// --- DETERMINING THE MODE AND EMPLOYEE ID ACCURATELY ---
+// Look for EmployeeID from either GET (clicking edit) or POST (submitting form)
+if (isset($_GET['EmployeeID'])) {
+    $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
+} elseif (isset($_POST['EmployeeID'])) {
+    $employeeID = mysqli_real_escape_string($dbconn, $_POST['EmployeeID']);
+}
+
+// Set Edit Mode condition if action is update OR if we have a valid ID during a form submission
+if ((isset($_GET['action']) && $_GET['action'] === 'update') || isset($_POST['EmployeeID']) && $_POST['EmployeeID'] !== "") {
+    $isEditMode = true;
+    $titlePage = "Edit Employee";
+
+    // Fetch employee data right away so the form can display it
+    $sqlFetch = "SELECT * FROM employee WHERE EmployeeID = '$employeeID'";
+    $result = mysqli_query($dbconn, $sqlFetch) or die("Query Failed: " . mysqli_error($dbconn));
+    $employee = mysqli_fetch_assoc($result);
+}
+
+/* employee delete */
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['EmployeeID'])) {
     $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
     $sqlDelete = "DELETE FROM employee WHERE EmployeeID = '$employeeID'";
@@ -27,23 +47,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
         set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting employee: ' . mysqli_error($dbconn) . '</span>', 'AdminEmployeeManagement.php');
     }
 }
-/*employee update */
-if (isset($_GET['action']) && $_GET['action'] === 'update' && isset($_GET['EmployeeID'])) {
-    $isEditMode = true;
-    $titlePage = "Edit Employee";
-    $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
 
-    // Fetch employee data right away so the form can display it
-    $sqlFetch = "SELECT * FROM employee WHERE EmployeeID = '$employeeID'";
-    $result = mysqli_query($dbconn, $sqlFetch) or die("Query Failed: " . mysqli_error($dbconn));
-    $employee = mysqli_fetch_assoc($result);
-
-    if (!$employee) {
-        die("Error: Employee ID $employeeID was not found.");
-    }
-}
-
-//
+// --- FORM PROCESSING ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $email = mysqli_real_escape_string($dbconn, $_POST['email']);
@@ -53,34 +58,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = mysqli_real_escape_string($dbconn, $_POST['role']);
 
     if ($isEditMode) {
-        // EXECUTE UPDATE TRANSACTION
-        $sqlUpdate = "UPDATE employee 
-                      SET Name='$name', Email='$email', Password='$password', PhoneNum='$phone', DepartmentID='$departmentID', Role='$role' 
-                      WHERE EmployeeID='$employeeID'";
+        $sqlCheckUpdate = "SELECT Email FROM employee WHERE Email = '$email' AND EmployeeID != '$employeeID'";
+        $checkResultUpdate = mysqli_query($dbconn, $sqlCheckUpdate);
 
-        if (mysqli_query($dbconn, $sqlUpdate)) {
-            set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee updated successfully.</span>', 'AdminEmployeeManagement.php');
+        if (mysqli_num_rows($checkResultUpdate) > 0) {
+            // FIX: Match parameter layout key structures perfectly for redirect states
+            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php?action=update&EmployeeID=' . $employeeID);
         } else {
-            set_alert('error', 'Error updating employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
+            $sqlUpdate = "UPDATE employee 
+                          SET Name='$name', Email='$email', Password='$password', PhoneNum='$phone', DepartmentID='$departmentID', Role='$role' 
+                          WHERE EmployeeID='$employeeID'";
+
+            if (mysqli_query($dbconn, $sqlUpdate)) {
+                set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee updated successfully.</span>', 'AdminEmployeeManagement.php');
+            } else {
+                set_alert('error', 'Error updating employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
+            }
         }
     } else {
         $sqlCheck = "SELECT Email FROM employee WHERE Email = '$email'";
         $checkResult = mysqli_query($dbconn, $sqlCheck);
+
         if (mysqli_num_rows($checkResult) > 0) {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php');
-           
         } else {
             $sqlInsert = "INSERT INTO employee (Name, Email, Password, PhoneNum, DepartmentID, Role) 
-                      VALUES ('$name', '$email', '$password', '$phone', '$departmentID', '$role')";
-        if (mysqli_query($dbconn, $sqlInsert)) {
-            set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee added successfully.</span>', 'AdminEmployeeManagement.php');
-            
-        } else {
-            set_alert('error', 'Error adding employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
+                          VALUES ('$name', '$email', '$password', '$phone', '$departmentID', '$role')";
 
+            if (mysqli_query($dbconn, $sqlInsert)) {
+                set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee added successfully.</span>', 'AdminEmployeeManagement.php');
+            } else {
+                set_alert('error', 'Error adding employee: ' . mysqli_error($dbconn), 'AdminEmployeeManagement.php');
+            }
         }
     }
-}
 }
 ?>
 <html>
@@ -144,7 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </form>
 
                         <?php } else { ?>
-                            <form method="post" action="AdminEmployeeProcess.php?action=update&EmployeeID=<?php echo $employeeID; ?>">
+                            <form method="post" action="AdminEmployeeProcess.php">
+                                <input type="hidden" name="EmployeeID" value="<?= htmlspecialchars($employeeID) ?>">
                                 <label for="name">Name:</label>
                                 <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($employee['Name']); ?>" required>
 
