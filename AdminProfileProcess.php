@@ -13,11 +13,11 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    $name         = mysqli_real_escape_string($dbconn, $_POST['name']);
-    $phone        = mysqli_real_escape_string($dbconn, $_POST['phone']);
-    $email        = mysqli_real_escape_string($dbconn, $_POST['email']);
+    $name = mysqli_real_escape_string($dbconn, $_POST['name']);
+    $phone = mysqli_real_escape_string($dbconn, $_POST['phone']);
+    $email = mysqli_real_escape_string($dbconn, $_POST['email']);
     $departmentID = mysqli_real_escape_string($dbconn, $_POST['department']);
-    $password     = $_POST['password'];
+    $password = $_POST['password'];
     $sqlUpdate = "UPDATE employee 
                   SET Name = '$name', 
                       PhoneNum = '$phone', 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     } else {
         set_alert('error', 'Error updating profile: ' . mysqli_error($dbconn), 'AdminProfile.php');
     }
-}else {
+} else {
     header("Location: AdminProfile.php");
     exit();
 }

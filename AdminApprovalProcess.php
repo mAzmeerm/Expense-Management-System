@@ -4,7 +4,7 @@ include("dbconn.php");
 include("function.php");
 require_login();
 // Get the ClaimID and force it to be an integer for absolute safety
-$claimID = (int)$_REQUEST["ClaimID"];
+$claimID = (int) $_REQUEST["ClaimID"];
 
 // 1. No quotes around $claimID because it is an integer
 $sql = "SELECT * FROM ExpenseClaim WHERE ClaimID = $claimID";

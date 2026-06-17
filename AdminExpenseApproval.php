@@ -20,6 +20,28 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 $selectedStatus = isset($_GET['statusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['statusFilter']) : '';
 
+//PAGINATION 
+$limit = 10;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+$sqlCount = "SELECT COUNT(*) as total FROM expenseclaim c 
+              JOIN employee e ON c.EmployeeID = e.EmployeeID 
+              JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
+              JOIN department d ON e.DepartmentID = d.DepartmentID
+              WHERE (e.Name LIKE '%$search%' 
+                 OR cat.CategoryName LIKE '%$search%' 
+                 OR c.Status LIKE '%$search%' 
+                 OR d.DepartmentName LIKE '%$search%')";
+
+if ($selectedStatus !== '') {
+    $sqlCount .= " AND c.Status = '$selectedStatus'";
+}
+
+$countResult = mysqli_query($dbconn, $sqlCount);
+$countRow = mysqli_fetch_assoc($countResult);
+$totalPages = ceil($countRow['total'] / $limit);
+
 // 3. Build SQL query merging both Search keywords AND Status Filter conditions
 $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               FROM expenseclaim c 
@@ -36,7 +58,7 @@ if ($selectedStatus !== '') {
     $sqlClaims .= " AND c.Status = '$selectedStatus'";
 }
 
-$sqlClaims .= " ORDER BY c.ClaimID DESC";
+$sqlClaims .= " ORDER BY c.ClaimID DESC LIMIT $offset, $limit";
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
 
 // 4. Fetch distinct status variants for our dropdown dynamically
@@ -77,14 +99,15 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " .
                         <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
                             <div style="flex: 2;">
                                 <label style="margin-top: 0;">Search claims:</label>
-                                <input type="text" id="tableSearch" name="search" placeholder="Search by employee, department, category..."
-                                    value="<?= htmlspecialchars($search) ?>"
-                                    oninput="liveSearch()">
+                                <input type="text" id="tableSearch" name="search"
+                                    placeholder="Search by employee, department, category..."
+                                    value="<?= htmlspecialchars($search) ?>" oninput="liveSearch()">
                             </div>
 
                             <div style="flex: 1;">
                                 <label style="margin-top: 0;">Filter by Status:</label>
-                                <select id="statusFilter" name="statusFilter" onchange="document.getElementById('searchForm').submit();">
+                                <select id="statusFilter" name="statusFilter"
+                                    onchange="document.getElementById('searchForm').submit();">
                                     <option value="">-- All Statuses --</option>
                                     <?php
                                     while ($rowStatus = mysqli_fetch_assoc($queryStatus)) {
@@ -96,7 +119,8 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " .
                                 </select>
                             </div>
                         </div>
-                        <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none; margin-top: auto;">Reset</a>
+                        <a class="btn btn-secondary" href="AdminExpenseApproval.php"
+                            style="text-decoration: none; margin-top: auto;">Reset</a>
                     </form>
                     <div class="table-responsive">
                         <table>
@@ -114,7 +138,7 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " .
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($claim = mysqli_fetch_assoc($claims)) : ?>
+                                <?php while ($claim = mysqli_fetch_assoc($claims)): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($claim['ClaimID']) ?></td>
                                         <td><?= htmlspecialchars($claim['Name']) ?></td>
@@ -129,13 +153,16 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " .
                                             </span>
                                         </td>
                                         <td>
-                                            <?php if ($claim['Status'] === 'Pending') : ?>
-                                                <form method="post" action="AdminApprovalProcess.php" style="display:inline; margin: 0;">
+                                            <?php if ($claim['Status'] === 'Pending'): ?>
+                                                <form method="post" action="AdminApprovalProcess.php"
+                                                    style="display:inline; margin: 0;">
                                                     <input type="hidden" name="ClaimID" value="<?= $claim['ClaimID'] ?>">
-                                                    <button type="submit" name="approve" value="1" class="btn btn-success">Approve</button>
-                                                    <button type="submit" name="reject" value="1" class="btn btn-danger" style="margin-left: 4px;">Reject</button>
+                                                    <button type="submit" name="approve" value="1"
+                                                        class="btn btn-success">Approve</button>
+                                                    <button type="submit" name="reject" value="1" class="btn btn-danger"
+                                                        style="margin-left: 4px;">Reject</button>
                                                 </form>
-                                            <?php elseif ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected') : ?>
+                                            <?php elseif ($claim['Status'] === 'Approved' || $claim['Status'] === 'Rejected'): ?>
                                                 <span style="color: #888;">-</span>
                                             <?php endif; ?>
                                         </td>
@@ -144,6 +171,7 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " .
                             </tbody>
                         </table>
                     </div>
+                    <?php show_pagination($page, $totalPages, $search, 'statusFilter', $selectedStatus); ?>
                 </div>
             </div>
         </div>

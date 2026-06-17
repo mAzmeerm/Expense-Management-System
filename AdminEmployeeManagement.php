@@ -18,6 +18,26 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['sea
 
 $selectedDepartment = isset($_GET['DepartmentFilter']) ? mysqli_real_escape_string($dbconn, $_GET['DepartmentFilter']) : '';
 
+//PAGINATION
+$limit = 10;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+$sqlCount = "SELECT COUNT(*) as total FROM employee e 
+             JOIN department d ON e.DepartmentID = d.DepartmentID
+             WHERE (e.Name LIKE '%$search%' 
+                OR e.Email LIKE '%$search%' 
+                OR d.DepartmentName LIKE '%$search%')";
+
+if ($selectedDepartment !== '') {
+    $sqlCount .= " AND d.DepartmentName = '$selectedDepartment'";
+}
+
+$countResult = mysqli_query($dbconn, $sqlCount);
+$countRow = mysqli_fetch_assoc($countResult);
+$totalPages = ceil($countRow['total'] / $limit);
+
+
 $sqlEmployees = "SELECT e.*, d.DepartmentName
                  FROM employee e 
                  JOIN department d ON e.DepartmentID = d.DepartmentID
@@ -29,7 +49,7 @@ if ($selectedDepartment !== '') {
     $sqlEmployees .= " AND d.DepartmentName = '$selectedDepartment'";
 }
 
-$sqlEmployees .= " ORDER BY d.DepartmentName DESC";
+$sqlEmployees .= " ORDER BY d.DepartmentName DESC LIMIT $offset, $limit";
 $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error processing employees query: " . mysqli_error($dbconn));
 $sqlDepartment = "SELECT DISTINCT DepartmentName FROM department ORDER BY DepartmentName ASC";
 $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching departments: " . mysqli_error($dbconn));
@@ -58,9 +78,11 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                     <?php show_alert(); ?>
                     <div class="card">
 
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Employee Management</h3>
-                            <a href="AdminEmployeeProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
+                            <a href="AdminEmployeeProcess.php?action=add" class="btn btn-primary"
+                                style="text-decoration:none;">
                                 + Add New Employee
                             </a>
                         </div>
@@ -70,14 +92,15 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
 
                                 <div style="flex: 2;">
                                     <label style="margin-top: 0;">Search Employees:</label>
-                                    <input type="text" id="tableSearch" name="search" placeholder="Search by name, email..."
-                                        value="<?= htmlspecialchars($search) ?>"
+                                    <input type="text" id="tableSearch" name="search"
+                                        placeholder="Search by name, email..." value="<?= htmlspecialchars($search) ?>"
                                         oninput="liveSearch()">
                                 </div>
 
                                 <div style="flex: 1;">
                                     <label style="margin-top: 0;">Filter by Department:</label>
-                                    <select id="DepartmentFilter" name="DepartmentFilter" onchange="this.form.submit();">
+                                    <select id="DepartmentFilter" name="DepartmentFilter"
+                                        onchange="this.form.submit();">
                                         <option value="">-- All Departments --</option>
                                         <?php
                                         while ($rowDepartment = mysqli_fetch_assoc($queryDepartment)) {
@@ -89,7 +112,8 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                     </select>
                                 </div>
                             </div>
-                            <a class="btn btn-secondary" href="AdminEmployeeManagement.php" style="text-decoration: none; margin-top: auto;">Reset</a>
+                            <a class="btn btn-secondary" href="AdminEmployeeManagement.php"
+                                style="text-decoration: none; margin-top: auto;">Reset</a>
                         </form>
                         <div class="table-responsive">
                             <table>
@@ -105,7 +129,7 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php while ($employee = mysqli_fetch_assoc($employees)) : ?>
+                                    <?php while ($employee = mysqli_fetch_assoc($employees)): ?>
                                         <tr>
                                             <td><?= htmlspecialchars($employee['EmployeeID']) ?></td>
                                             <td><?= htmlspecialchars($employee['Name']) ?></td>
@@ -118,7 +142,8 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                                     <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
                                                         class="btn btn-secondary" style="text-decoration: none;">Edit</a>
                                                     <a href="AdminEmployeeProcess.php?action=delete&EmployeeID=<?= $employee['EmployeeID'] ?>"
-                                                        class="btn btn-danger" style="text-decoration: none;" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                                        class="btn btn-danger" style="text-decoration: none;"
+                                                        onclick="return confirm('Are you sure you want to delete this employee?');">
                                                         Delete
                                                     </a>
                                                 </div>
@@ -128,7 +153,7 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                 </tbody>
                             </table>
                         </div>
-
+                        <?php show_pagination($page, $totalPages, $search, 'DepartmentFilter', $selectedDepartment); ?>
                     </div>
                 </div>
             </div>

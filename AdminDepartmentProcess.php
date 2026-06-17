@@ -60,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (mysqli_num_rows($checkResult) > 0) {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Category "' . htmlspecialchars($DepartmentName) . '" already exists!</span>', 'AdminDepartmentManagement.php');
-            
+
         } else {
             $sqlInsert = "INSERT INTO department (DepartmentName) VALUES ('$DepartmentName')";
             if (mysqli_query($dbconn, $sqlInsert)) {
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Department added successfully.</span>', 'AdminDepartmentManagement.php');
-                
+
             } else {
                 set_alert('error', 'Error adding department: ' . mysqli_error($dbconn), 'AdminDepartmentManagement.php');
             }
@@ -80,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="style.css">
     <title><?= $titlePage ?></title>
 </head>
+
 <body>
     <div class="layout">
         <?php
@@ -93,9 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="container">
                     <?php show_alert(); ?>
                     <div class="card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3><?= $titlePage ?></h3>
-                            <a href="AdminDepartmentManagement.php" class="btn btn-secondary" style="text-decoration:none;">
+                            <a href="AdminDepartmentManagement.php" class="btn btn-secondary"
+                                style="text-decoration:none;">
                                 Back
                             </a>
                         </div>
@@ -103,14 +106,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php if (!$isEditMode) { ?>
                             <form method="post" action="AdminDepartmentProcess.php?action=add">
                                 <label for="DepartmentName">Department Name:</label>
-                                <input type="text" id="DepartmentName" name="DepartmentName" placeholder="e.g. Management,Marketing etc." required>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Add Department</button>
+                                <input type="text" id="DepartmentName" name="DepartmentName"
+                                    placeholder="e.g. Management,Marketing etc." required>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Add
+                                    Department</button>
                             </form>
                         <?php } else { ?>
                             <form method="post" action="AdminDepartmentProcess.php?action=edit&id=<?= $DepartmentID ?>">
                                 <label for="DepartmentName">Department Name:</label>
-                                <input type="text" id="DepartmentName" name="DepartmentName" value="<?= htmlspecialchars($row['DepartmentName']) ?>" required>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Update Department</button>
+                                <input type="text" id="DepartmentName" name="DepartmentName"
+                                    value="<?= htmlspecialchars($row['DepartmentName']) ?>" required>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Update
+                                    Department</button>
                             </form>
                         <?php } ?>
                     </div>

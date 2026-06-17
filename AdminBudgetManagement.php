@@ -15,36 +15,38 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 
 // 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
-$selectedYear = isset($_GET['YearFilter']) ? mysqli_real_escape_string($dbconn, $_GET['YearFilter']) : '';
 
+//PAGINATION
+$limit = 10;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
+$sqlCount = "SELECT COUNT(*) as total FROM budget b
+              JOIN department d ON b.DepartmentID = d.DepartmentID
+              WHERE d.DepartmentName LIKE '%$search%'
+              OR b.Year LIKE '%$search%'
+              OR b.Description LIKE '%$search%'";
+
+$countResult = mysqli_query($dbconn, $sqlCount);
+$countRow = mysqli_fetch_assoc($countResult);
+$totalPages = ceil($countRow['total'] / $limit);
+
+// 3. Fetch all matching budgets
 $sqlBudget = "SELECT b.*, d.DepartmentName
               FROM budget b
               JOIN department d ON b.DepartmentID = d.DepartmentID
-              WHERE (d.DepartmentName LIKE '%$search%'
-                 OR b.Year LIKE '%$search%'
-                 OR b.Description LIKE '%$search%')";
+              WHERE d.DepartmentName LIKE '%$search%'
+              OR b.Year LIKE '%$search%'
+              OR b.Description LIKE '%$search%'
+              ORDER BY b.BudgetID DESC LIMIT $offset, $limit";
 
-
-if ($selectedYear !== '') {
-    $sqlBudget .= " AND b.Year = '$selectedYear'";
-}
-
-// FIX: Append the sorting rule at the absolute end of the query string
-$sqlBudget .= " ORDER BY b.BudgetID DESC";
-
-$budgets = mysqli_query($dbconn, $sqlBudget) or die("Error processing budget query: " . mysqli_error($dbconn));
-
-//Fetch all unique years for dropdown checklist options
-$sqlYear = "SELECT DISTINCT Year FROM budget ORDER BY Year ASC";
-$queryYear = mysqli_query($dbconn, $sqlYear) or die("Error fetch year: " . mysqli_error($dbconn));
+$budgets = mysqli_query($dbconn, $sqlBudget) or die("Error: " . mysqli_error($dbconn));
 ?>
 
 <html>
 
 <head>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
     <title>Admin Budget Management</title>
 </head>
 
@@ -66,36 +68,21 @@ $queryYear = mysqli_query($dbconn, $sqlYear) or die("Error fetch year: " . mysql
                         <div
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Budget Management</h3>
-                            <a href="AdminBudgetProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
+                            <a href="AdminBudgetProcess.php?action=add" class="btn btn-primary"
+                                style="text-decoration:none;">
                                 + Add New Budget
                             </a>
                         </div>
 
-                        <form class="searchbar" id="searchForm" method="get" action="AdminBudgetManagement.php">
-                            <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
-
-                                <div style="flex: 2;">
-                                    <label style="margin-top: 0;">Search budgets:</label>
-                                    <input type="text" id="tableSearch" name="search" placeholder="Search by department, year, description..."
-                                        value="<?= htmlspecialchars($search) ?>"
-                                        oninput="liveSearch()">
-                                </div>
-
-                                <div style="flex: 1;">
-                                    <label style="margin-top: 0;">Filter by Year:</label>
-                                    <select id="YearFilter" name="YearFilter" onchange="this.form.submit();">
-                                        <option value="">-- All Years --</option>
-                                        <?php
-                                        while ($rowYear = mysqli_fetch_assoc($queryYear)) {
-                                            $YearVal = $rowYear['Year'];
-                                            $selected = ($YearVal == $selectedYear) ? 'selected' : '';
-                                            echo "<option value='" . htmlspecialchars($YearVal) . "' $selected>" . htmlspecialchars($YearVal) . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
+                        <form class="searchbar" method="get">
+                            <div style="flex: 1;">
+                                <label>Search budget:</label>
+                                <input type="text" name="search" placeholder="Department or year"
+                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                             </div>
-                            <a class="btn btn-secondary" href="AdminBudgetManagement.php" style="text-decoration: none; margin-top: auto;">Reset</a>
+                            <button class="btn btn-primary" type="submit">Search</button>
+                            <a class="btn btn-secondary" href="AdminBudgetManagement.php"
+                                style="text-decoration: none;">Reset</a>
                         </form>
 
                         <div class="table-responsive">
@@ -117,7 +104,7 @@ $queryYear = mysqli_query($dbconn, $sqlYear) or die("Error fetch year: " . mysql
                                     <?php
                                     if (mysqli_num_rows($budgets) > 0) {
                                         while ($budget = mysqli_fetch_assoc($budgets)) {
-                                    ?>
+                                            ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($budget['BudgetID']) ?></td>
                                                 <td><?= htmlspecialchars($budget['DepartmentName']) ?></td>
@@ -127,22 +114,24 @@ $queryYear = mysqli_query($dbconn, $sqlYear) or die("Error fetch year: " . mysql
                                                 <td><?= money($budget['RemainAmount']) ?></td>
                                                 <td><?= htmlspecialchars($budget['Description']) ?></td>
                                                 <td>
-                                                    <a href="AdminBudgetProcess.php?action=edit&BudgetID=<?= $budget['BudgetID'] ?>" class="btn btn-secondary">Edit</a>
+                                                    <a href="AdminBudgetProcess.php?action=edit&BudgetID=<?= $budget['BudgetID'] ?>"
+                                                        class="btn btn-secondary">Edit</a>
                                                 </td>
                                             </tr>
-                                        <?php
+                                            <?php
                                         }
                                     } else {
                                         ?>
                                         <tr>
                                             <td colspan="7" style="text-align:center;">No budget found.</td>
                                         </tr>
-                                    <?php
+                                        <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
+                        <?php show_pagination($page, $totalPages, $search); ?>
                     </div>
                 </div>
             </div>
