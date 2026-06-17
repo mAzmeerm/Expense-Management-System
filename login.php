@@ -46,7 +46,7 @@ include("function.php");
                     </div>
                     <div class="input-box" style="margin-top: 15px">
                         <input class="login-input" type="email" id="Email" name="Email" required>
-                        <label for="Email" class="login-label">Email</label>
+                        <label for="Email" class="login-label">Email Address</label>
                     </div>
                     <div class="input-box password-container" style="margin-top: 25px">
                         <input class="login-input" type="password" id="Password" name="Password" required>
