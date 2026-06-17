@@ -7,6 +7,7 @@ include("function.php");
 
 <head>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <title>Login Page</title>
 </head>
 
@@ -53,8 +54,6 @@ include("function.php");
                         <label for="Password" class="login-label">Password</label>
                         <span id="toggle">Show </span>
                     </div>
-
-                    <script src="script.js"></script>
                     <button class="btn btn-login" style="width:100%;margin-top:1.2rem;" name="login">Login</button>
                 </form>
             </div>

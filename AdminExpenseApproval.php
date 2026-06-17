@@ -2,8 +2,11 @@
 session_start();
 include("dbconn.php");
 include("function.php");
+require_login();
 
 $loggedInUser = $_SESSION['UserID'];
+
+// 1. Fetch Admin Name
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
 
@@ -13,14 +16,11 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
     $adminName = "Admin";
 }
 
-$sql2 = "SELECT * FROM expenseclaim";
-$query = mysqli_query($dbconn, $sql2) or die("Error: " . mysqli_error($dbconn));
-$row = mysqli_num_rows($query);
-
-// 2. Process search keywords securely
+// 2. Process search keywords and status filter securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
+$selectedStatus = isset($_GET['statusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['statusFilter']) : '';
 
-// 3. Fetch all matching Pending claims
+// 3. Build SQL query merging both Search keywords AND Status Filter conditions
 $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               FROM expenseclaim c 
               JOIN employee e ON c.EmployeeID = e.EmployeeID 
@@ -29,17 +29,26 @@ $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               WHERE (e.Name LIKE '%$search%' 
                  OR cat.CategoryName LIKE '%$search%' 
                  OR c.Status LIKE '%$search%' 
-                 OR d.DepartmentName LIKE '%$search%') 
-              ORDER BY c.ClaimID DESC";
+                 OR d.DepartmentName LIKE '%$search%')";
 
+// If a specific dropdown filter status is selected, append it to the query
+if ($selectedStatus !== '') {
+    $sqlClaims .= " AND c.Status = '$selectedStatus'";
+}
+
+$sqlClaims .= " ORDER BY c.ClaimID DESC";
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbconn));
-?>
 
+// 4. Fetch distinct status variants for our dropdown dynamically
+$sqlStatus = "SELECT DISTINCT status FROM expenseclaim ORDER BY status ASC";
+$queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " . mysqli_error($dbconn));
+?>
 
 <html>
 
 <head>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <title>Admin Expense Approval</title>
 </head>
 
@@ -64,15 +73,31 @@ $claims = mysqli_query($dbconn, $sqlClaims) or die("Error: " . mysqli_error($dbc
                         </a>
                     </div>
 
-                    <form class="searchbar" method="get">
-                        <div style="flex: 1;">
-                            <label style="margin-top: 0;">Search claims:</label>
-                            <input type="text" name="search" placeholder="Search by employee, department, category, or status" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                        </div>
-                        <button class="btn btn-primary" type="submit">Search</button>
-                        <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none;">Reset</a>
-                    </form>
+                    <form class="searchbar" id="searchForm" method="get" action="AdminExpenseApproval.php">
+                        <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
+                            <div style="flex: 2;">
+                                <label style="margin-top: 0;">Search claims:</label>
+                                <input type="text" id="tableSearch" name="search" placeholder="Search by employee, department, category..."
+                                    value="<?= htmlspecialchars($search) ?>"
+                                    oninput="liveSearch()">
+                            </div>
 
+                            <div style="flex: 1;">
+                                <label style="margin-top: 0;">Filter by Status:</label>
+                                <select id="statusFilter" name="statusFilter" onchange="document.getElementById('searchForm').submit();">
+                                    <option value="">-- All Statuses --</option>
+                                    <?php
+                                    while ($rowStatus = mysqli_fetch_assoc($queryStatus)) {
+                                        $statusVal = $rowStatus['status'];
+                                        $selected = ($statusVal == $selectedStatus) ? 'selected' : '';
+                                        echo "<option value='" . htmlspecialchars($statusVal) . "' $selected>" . htmlspecialchars($statusVal) . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <a class="btn btn-secondary" href="AdminExpenseApproval.php" style="text-decoration: none; margin-top: auto;">Reset</a>
+                    </form>
                     <div class="table-responsive">
                         <table>
                             <thead>
