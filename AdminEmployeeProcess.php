@@ -111,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="container">
                     <?php show_alert(); ?>
                     <div class="card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3><?php echo $titlePage; ?></h3>
                             <a href="AdminEmployeeManagement.php" class="btn btn-secondary">Back</a>
                         </div>
@@ -125,7 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="email" id="email" name="email" required>
                                 <label for="password">Password:</label>
                                 <input type="password" id="password" name="password" required>
-                                <label style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
+                                <label
+                                    style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
                                     <input type="checkbox"
                                         onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"
                                         style="width: 16px; height: 16px; margin: 0 8px 0 0; vertical-align: middle; cursor: pointer;">
@@ -151,23 +153,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="Staff">Staff</option>
                                     <option value="Admin">Admin</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Add Employee</button>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Add
+                                    Employee</button>
                             </form>
 
                         <?php } else { ?>
                             <form method="post" action="AdminEmployeeProcess.php">
                                 <input type="hidden" name="EmployeeID" value="<?= htmlspecialchars($employeeID) ?>">
                                 <label for="name">Name:</label>
-                                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($employee['Name']); ?>" required>
+                                <input type="text" id="name" name="name"
+                                    value="<?php echo htmlspecialchars($employee['Name']); ?>" required>
 
                                 <label for="email">Email:</label>
-                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($employee['Email']); ?>" required>
+                                <input type="email" id="email" name="email"
+                                    value="<?php echo htmlspecialchars($employee['Email']); ?>" required>
 
                                 <label for="password">Password:</label>
-                                <input type="password" id="password" name="password" value="<?php echo htmlspecialchars($employee['Password']); ?>" required>
+                                <input type="password" id="password" name="password"
+                                    value="<?php echo htmlspecialchars($employee['Password']); ?>" required>
 
                                 <label for="phone">Phone Number:</label>
-                                <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($employee['PhoneNum']); ?>" required>
+                                <input type="text" id="phone" name="phone"
+                                    value="<?php echo htmlspecialchars($employee['PhoneNum']); ?>" required>
 
                                 <label for="department">Department:</label>
                                 <select id="department" name="department" required>
@@ -183,10 +190,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <label for="role">Role:</label>
                                 <select id="role" name="role" required>
-                                    <option value="Staff" <?php echo ($employee['Role'] == 'Staff') ? 'selected' : ''; ?>>Staff</option>
-                                    <option value="Admin" <?php echo ($employee['Role'] == 'Admin') ? 'selected' : ''; ?>>Admin</option>
+                                    <option value="Staff" <?php echo ($employee['Role'] == 'Staff') ? 'selected' : ''; ?>>
+                                        Staff</option>
+                                    <option value="Admin" <?php echo ($employee['Role'] == 'Admin') ? 'selected' : ''; ?>>
+                                        Admin</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Update Employee</button>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Update
+                                    Employee</button>
                             </form>
                         <?php } ?>
                     </div>
