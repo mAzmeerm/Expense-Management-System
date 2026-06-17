@@ -13,24 +13,33 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
     $adminName = "Admin";
 }
 
-// 2. Process search keywords securely
+
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 
-// 3. Fetch all matching employees
+$selectedDepartment = isset($_GET['DepartmentFilter']) ? mysqli_real_escape_string($dbconn, $_GET['DepartmentFilter']) : '';
+
 $sqlEmployees = "SELECT e.*, d.DepartmentName
                  FROM employee e 
                  JOIN department d ON e.DepartmentID = d.DepartmentID
-                 WHERE e.Name LIKE '%$search%' 
+                 WHERE (e.Name LIKE '%$search%' 
                     OR e.Email LIKE '%$search%' 
-                    OR d.DepartmentName LIKE '%$search%'
-                 ORDER BY e.EmployeeID DESC";
-$employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_error($dbconn));
+                    OR d.DepartmentName LIKE '%$search%')";
+
+if ($selectedDepartment !== '') {
+    $sqlEmployees .= " AND d.DepartmentName = '$selectedDepartment'";
+}
+
+$sqlEmployees .= " ORDER BY d.DepartmentName DESC";
+$employees = mysqli_query($dbconn, $sqlEmployees) or die("Error processing employees query: " . mysqli_error($dbconn));
+$sqlDepartment = "SELECT DISTINCT DepartmentName FROM department ORDER BY DepartmentName ASC";
+$queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching departments: " . mysqli_error($dbconn));
 ?>
 
 <html>
 
 <head>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer> </script>
     <title>Admin Employee Management</title>
 </head>
 
@@ -56,16 +65,32 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
                             </a>
                         </div>
 
-                        <form class="searchbar" method="get">
-                            <div style="flex: 1;">
-                                <label style="margin-top: 0;">Search employee:</label>
-                                <input type="text" name="search" placeholder="Name, email, or department"
-                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                            </div>
-                            <button class="btn btn-primary" type="submit">Search</button>
-                            <button class="btn btn-secondary" type="button" onclick="window.location.href='AdminEmployeeManagement.php'">Reset</button>
-                        </form>
+                        <form class="searchbar" id="searchForm" method="get" action="AdminEmployeeManagement.php">
+                            <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
 
+                                <div style="flex: 2;">
+                                    <label style="margin-top: 0;">Search Employees:</label>
+                                    <input type="text" id="tableSearch" name="search" placeholder="Search by name, email..."
+                                        value="<?= htmlspecialchars($search) ?>"
+                                        oninput="liveSearch()">
+                                </div>
+
+                                <div style="flex: 1;">
+                                    <label style="margin-top: 0;">Filter by Department:</label>
+                                    <select id="DepartmentFilter" name="DepartmentFilter" onchange="this.form.submit();">
+                                        <option value="">-- All Departments --</option>
+                                        <?php
+                                        while ($rowDepartment = mysqli_fetch_assoc($queryDepartment)) {
+                                            $DepartmentVal = $rowDepartment['DepartmentName'];
+                                            $selected = ($DepartmentVal == $selectedDepartment) ? 'selected' : '';
+                                            echo "<option value='" . htmlspecialchars($DepartmentVal) . "' $selected>" . htmlspecialchars($DepartmentVal) . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <a class="btn btn-secondary" href="AdminEmployeeManagement.php" style="text-decoration: none; margin-top: auto;">Reset</a>
+                        </form>
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -95,7 +120,7 @@ $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error: " . mysqli_erro
                                                     <a href="AdminEmployeeProcess.php?action=delete&EmployeeID=<?= $employee['EmployeeID'] ?>"
                                                         class="btn btn-danger" style="text-decoration: none;" onclick="return confirm('Are you sure you want to delete this employee?');">
                                                         Delete
-                                    </a>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
