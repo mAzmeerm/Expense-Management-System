@@ -5,12 +5,35 @@ include("function.php");
 
 if (isset($_POST['login'])) {
     $email    = mysqli_real_escape_string($dbconn, $_POST['Email']);
-    $password = mysqli_real_escape_string($dbconn, $_POST['Password']);
+    $password = $_POST['Password'];
     $role = mysqli_real_escape_string($dbconn, $_POST['role']);
-    $sql = "SELECT * FROM employee WHERE Email='$email' AND Role='$role' AND Password='$password'";
+    $sql = "SELECT * FROM employee WHERE Email='$email' AND Role='$role'";
     $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
-    if (mysqli_num_rows($query) > 0) {
-        $row = mysqli_fetch_assoc($query);
+    $row = mysqli_fetch_assoc($query);
+
+    $loginOk = false;
+
+    if ($row) {
+        $storedPassword = $row['Password'];
+
+        if (is_hashed($storedPassword)) {
+            // Normal case: stored value is already a bcrypt hash.
+            $loginOk = verify_password($password, $storedPassword);
+        } else {
+            // Legacy case: stored value is still plaintext (old account).
+            // Check it the old way, then upgrade it to a hash right now.
+            if ($password === $storedPassword) {
+                $loginOk = true;
+
+                $newHash = mysqli_real_escape_string($dbconn, hash_password($password));
+                $employeeID = mysqli_real_escape_string($dbconn, $row['EmployeeID']);
+                mysqli_query($dbconn, "UPDATE employee SET Password = '$newHash' WHERE EmployeeID = '$employeeID'");
+                $row['Password'] = $newHash; // keep $row in sync for the session below
+            }
+        }
+    }
+
+    if ($loginOk) {
         $_SESSION['UserID'] = $row['EmployeeID'];
         $_SESSION['Email'] = $row['Email'];
         $_SESSION['Role'] = $row['Role'];

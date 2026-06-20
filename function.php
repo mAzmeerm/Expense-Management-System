@@ -10,6 +10,23 @@ function money($amount)
     return 'RM ' . number_format((float) $amount, 2);
 }
 
+function hash_password($plainPassword)
+{
+    // bcrypt hash, includes a random salt automatically
+    return password_hash($plainPassword, PASSWORD_BCRYPT);
+}
+
+function verify_password($plainPassword, $hashedPassword)
+{
+    return password_verify($plainPassword, $hashedPassword);
+}
+
+function is_hashed($password)
+{
+    // bcrypt hashes always start with $2y$, $2a$, or $2b$ and are 60 chars long
+    return (bool) preg_match('/^\$2[aby]\$/', $password);
+}
+
 
 
 function require_login()

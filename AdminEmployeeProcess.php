@@ -52,7 +52,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $email = mysqli_real_escape_string($dbconn, $_POST['email']);
-    $password = mysqli_real_escape_string($dbconn, $_POST['password']);
     $phone = mysqli_real_escape_string($dbconn, $_POST['phone']);
     $departmentID = mysqli_real_escape_string($dbconn, $_POST['department']);
     $role = mysqli_real_escape_string($dbconn, $_POST['role']);
@@ -66,8 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php?action=update&EmployeeID=' . $employeeID);
         } else {
             $sqlUpdate = "UPDATE employee 
-                          SET Name='$name', Email='$email', Password='$password', PhoneNum='$phone', DepartmentID='$departmentID', Role='$role' 
-                          WHERE EmployeeID='$employeeID'";
+                          SET Name='$name', Email='$email', PhoneNum='$phone', DepartmentID='$departmentID', Role='$role'";
+            if (!empty($_POST['password'])) {
+                $hashedPassword = mysqli_real_escape_string($dbconn, hash_password($_POST['password']));
+                $sqlUpdate .= ", Password='$hashedPassword'";
+            }
+            $sqlUpdate .= " WHERE EmployeeID='$employeeID'";
 
             if (mysqli_query($dbconn, $sqlUpdate)) {
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee updated successfully.</span>', 'AdminEmployeeManagement.php');
@@ -82,8 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (mysqli_num_rows($checkResult) > 0) {
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php');
         } else {
+            $hashedPassword = mysqli_real_escape_string($dbconn, hash_password($_POST['password']));
             $sqlInsert = "INSERT INTO employee (Name, Email, Password, PhoneNum, DepartmentID, Role) 
-                          VALUES ('$name', '$email', '$password', '$phone', '$departmentID', '$role')";
+                          VALUES ('$name', '$email', '$hashedPassword', '$phone', '$departmentID', '$role')";
 
             if (mysqli_query($dbconn, $sqlInsert)) {
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee added successfully.</span>', 'AdminEmployeeManagement.php');
@@ -170,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <label for="password">Password:</label>
                                 <input type="password" id="password" name="password"
-                                    value="<?php echo htmlspecialchars($employee['Password']); ?>" required>
+                                    placeholder="Leave blank to keep current password">
 
                                 <label for="phone">Phone Number:</label>
                                 <input type="text" id="phone" name="phone"

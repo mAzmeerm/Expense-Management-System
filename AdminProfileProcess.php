@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                       Email = '$email', 
                       DepartmentID = '$departmentID'";
     if (!empty($password)) {
-        $sqlUpdate .= ", Password = '" . mysqli_real_escape_string($dbconn, $password) . "'";
+        $sqlUpdate .= ", Password = '" . mysqli_real_escape_string($dbconn, hash_password($password)) . "'";
     }
     $sqlUpdate .= " WHERE EmployeeID = '$loggedInUser'";
     if (mysqli_query($dbconn, $sqlUpdate)) {
