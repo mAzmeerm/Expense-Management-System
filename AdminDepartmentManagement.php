@@ -3,6 +3,7 @@ session_start();
 include("dbconn.php");
 include("function.php");
 require_login();
+
 $loggedInUser = $_SESSION['UserID'];
 $sqlAdmin = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $queryAdmin = mysqli_query($dbconn, $sqlAdmin) or die("Error: " . mysqli_error($dbconn));
@@ -48,15 +49,15 @@ $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_erro
                             </a>
                         </div>
 
-                        <form class="searchbar" method="get">
+                       <form class="searchbar" method="get">
                             <div style="flex: 1;">
-                                <label style="margin-top: 0;">Search category:</label>
-                                <input type="text" name="search" placeholder="Name of Department"
-                                    value="<?php echo htmlspecialchars($search); ?>">
+                                <label>Search budget:</label>
+                                <input type="text" name="search" placeholder="Department or year"
+                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                             </div>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                            <button type="button" class="btn btn-secondary"
-                                onclick="window.location.href='AdminDepartmentManagement.php'">Reset</button>
+                            <button class="btn btn-primary" type="submit">Search</button>
+                            <a class="btn btn-secondary" href="AdminDepartmentManagement.php"
+                                style="text-decoration: none;">Reset</a>
                         </form>
 
                         <table class="data-table">
