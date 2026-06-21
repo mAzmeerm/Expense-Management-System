@@ -14,14 +14,20 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 }
 // 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
-// 3. Fetch all matching Department
-$sqlCategory = "SELECT * FROM department WHERE DepartmentName LIKE '%$search%' ORDER BY DepartmentID ASC";
-$categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_error($dbconn));
+
+// 3. Fetch all matching departments
+$sqlDepartment = "SELECT *
+                  FROM department 
+                  WHERE DepartmentName LIKE '%$search%' 
+                  ORDER BY DepartmentID ASC";
+
+$departments = mysqli_query($dbconn, $sqlDepartment) or die("Error processing department query: " . mysqli_error($dbconn));
 ?>
 <html>
 
 <head>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <title>Admin Department Management</title>
 </head>
 
@@ -40,48 +46,60 @@ $categories = mysqli_query($dbconn, $sqlCategory) or die("Error: " . mysqli_erro
                     <?= show_alert(); ?>
                     <div class="card">
 
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>Department Management</h3>
-                            <a href="AdminDepartmentProcess.php?action=add" class="btn btn-primary"
-                                style="text-decoration:none;">
+                            <a href="AdminDepartmentProcess.php?action=add" class="btn btn-primary" style="text-decoration:none;">
                                 + Add New Department
                             </a>
                         </div>
 
-                       <form class="searchbar" method="get">
-                            <div style="flex: 1;">
-                                <label>Search budget:</label>
-                                <input type="text" name="search" placeholder="Department or year"
-                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                        <form class="searchbar" id="searchForm" method="get" onsubmit="event.preventDefault();">
+                            <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
+                                <div style="flex: 2;">
+                                    <label style="margin-top: 0;">Search Department:</label>
+                                    <input type="text" id="tableSearch" name="search"
+                                        placeholder="Search by department name" value="<?= htmlspecialchars($search) ?>"
+                                        oninput="liveSearch()">
+                                </div>
                             </div>
-                            <button class="btn btn-primary" type="submit">Search</button>
-                            <a class="btn btn-secondary" href="AdminDepartmentManagement.php"
-                                style="text-decoration: none;">Reset</a>
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('tableSearch').value=''; liveSearch();" style="margin-top: auto;">Reset</button>
                         </form>
 
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Department ID</th>
-                                    <th>Department Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = mysqli_fetch_assoc($categories)) { ?>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
                                     <tr>
-                                        <td><?php echo $row['DepartmentID']; ?></td>
-                                        <td><?php echo $row['DepartmentName']; ?></td>
-                                        <td>
-                                            <a href="AdminDepartmentProcess.php?action=edit&id=<?php echo $row['DepartmentID']; ?>"
-                                                class="btn btn-primary">Edit</a>
-                                            <a href="AdminDepartmentProcess.php?action=delete&id=<?php echo $row['DepartmentID']; ?>"
-                                                class="btn btn-danger"
-                                                onclick="return confirm('Are you sure you want to delete this department?');">Delete</a>
-                                        </td>
+                                        <th>Department ID</th>
+                                        <th>Department Name</th>
+                                        <th>Actions</th>
                                     </tr>
-                                <?php } ?>
-                            </tbody>
+                                </thead>
+                                <tbody>
+                                    <?php if (mysqli_num_rows($departments) > 0) { 
+                                        while ($row = mysqli_fetch_assoc($departments)) { ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($row['DepartmentID']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['DepartmentName']); ?></td>
+                                                <td>
+                                                    <a href="AdminDepartmentProcess.php?action=edit&id=<?php echo $row['DepartmentID']; ?>" class="btn btn-primary">Edit</a>
+                                                    <a href="AdminDepartmentProcess.php?action=delete&id=<?php echo $row['DepartmentID']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this department?');">Delete</a>
+                                                </td>
+                                            </tr>
+                                        <?php } 
+                                    } else { ?>
+                                        <tr>
+                                            <td colspan="3" style="text-align:center;">No departments found.</td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 
 </html>
