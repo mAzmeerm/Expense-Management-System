@@ -62,9 +62,10 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
                             <label for="phone">Phone:</label>
                             <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($adminPhone); ?>">
                             <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($adminEmail); ?>">
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($adminEmail); ?>" style="background:#f4f4f4" readonly>
                             <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" value="<?php echo htmlspecialchars($adminPassword); ?>"> <br>
+                                <input type="password" id="password" name="password"
+                                    placeholder="Leave blank to keep current password">
                             <label style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
                                 <input type="checkbox"
                                     onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"

@@ -16,27 +16,58 @@ if ($row = mysqli_fetch_assoc($query)) {
     $employeeName = "Employee";
 }
 
-// Search input
-$search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, trim($_GET['search'])) : '';
+// 2. Process search keywords and filters securely
+$search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
+$selectedStatus = isset($_GET['statusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['statusFilter']) : '';
 
-// Query to fetch this employee's claims, with optional search filter
-$sql_claims = "SELECT c.ClaimID, c.Description, cat.CategoryName, c.Amount, c.Status, c.ClaimDate
-               FROM expenseclaim c
-               JOIN expensecategory cat ON c.CategoryID = cat.CategoryID
-               WHERE c.EmployeeID = '$loggedInUser'";
+// PAGINATION SETUP
+$limit = 10;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+if ($page < 1) $page = 1; // Prevent negative page numbers
+$offset = ($page - 1) * $limit;
 
-if ($search !== '') {
-    $sql_claims .= " AND (c.ClaimID LIKE '%$search%'
-                     OR LOWER(c.Description) LIKE LOWER('%$search%')
-                     OR LOWER(cat.CategoryName) LIKE LOWER('%$search%'))";
+// FIX 1: Grouped OR conditions using parentheses so it strictly isolates by the loggedInUser
+// FIX 1: Update your Pagination Count query status terms
+$sqlCount = "SELECT COUNT(*) as total FROM expenseclaim c 
+             JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
+             WHERE c.EmployeeID = '$loggedInUser' 
+             AND (cat.CategoryName LIKE '%$search%' OR c.Description LIKE '%$search%')";
+
+if ($selectedStatus !== '') {
+    $sqlCount .= " AND c.Status = '$selectedStatus'";
 }
 
-$sql_claims .= " ORDER BY c.ClaimDate DESC";
-$claims = mysqli_query($dbconn, $sql_claims) or die("Error: " . mysqli_error($dbconn));
+$countResult = mysqli_query($dbconn, $sqlCount) or die("Count Error: " . mysqli_error($dbconn));
+$countRow = mysqli_fetch_assoc($countResult);
+$totalRows = $countRow['total'];
+$totalPages = ceil($totalRows / $limit);
+if ($totalPages < 1) $totalPages = 1;
+
+
+// FIX 2: Added 'c.Status AS Status, c.Status AS status' so both array key casings work perfectly!
+$sqlClaims = "SELECT c.ClaimID, c.Description, cat.CategoryName, c.Amount, c.Status AS Status, c.Status AS status, c.ClaimDate
+              FROM expenseclaim c
+              JOIN expensecategory cat ON c.CategoryID = cat.CategoryID
+              WHERE c.EmployeeID = '$loggedInUser'
+              AND (cat.CategoryName LIKE '%$search%' OR c.Description LIKE '%$search%')";
+
+if ($selectedStatus !== '') {
+    $sqlClaims .= " AND c.Status = '$selectedStatus'";
+}
+
+$sqlClaims .= " ORDER BY c.ClaimDate DESC LIMIT $offset, $limit";
+$claims = mysqli_query($dbconn, $sqlClaims) or die("Claims Fetch Error: " . mysqli_error($dbconn));
+
+
+// FIX 3: Update your dynamic dropdown selection to return both casings as well
+$sqlStatus = "SELECT DISTINCT Status AS Status, Status AS status FROM expenseclaim ORDER BY Status ASC";
+$queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " . mysqli_error($dbconn));
 ?>
 <html>
+
 <head>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <title>My Claims</title>
 </head>
 
@@ -55,13 +86,34 @@ $claims = mysqli_query($dbconn, $sql_claims) or die("Error: " . mysqli_error($db
                 <div class="card">
                     <h3>My Claims</h3>
 
-                    <form method="GET" action="EmployeeMyClaim.php">
-                        <label for="search" style="margin-top:1rem;">Search claims:</label>
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.2rem;">
-                            <input type="text" id="search" name="search" placeholder="Claim ID, description or category..." value="<?= htmlspecialchars($search) ?>" style="margin-top:0; flex:1;">
-                            <button type="submit" class="btn btn-primary" style="white-space:nowrap;">Search</button>
-                            <a href="EmployeeMyClaim.php" class="btn btn-secondary" style="white-space:nowrap;">Reset</a>
+
+
+                    <form class="searchbar" id="searchForm" method="get" action="EmployeeMyclaim.php">
+                        <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
+                            <div style="flex: 2;">
+                                <label style="margin-top: 0;">Search claims:</label>
+                                <input type="text" id="tableSearch" name="search"
+                                    placeholder="Search by category,descriptions..."
+                                    value="<?= htmlspecialchars($search) ?>" oninput="liveSearch()">
+                            </div>
+
+                            <div style="flex: 1;">
+                                <label style="margin-top: 0;">Filter by Status:</label>
+                                <select id="statusFilter" name="statusFilter"
+                                    onchange="document.getElementById('searchForm').submit();">
+                                    <option value="">-- All Statuses --</option>
+                                    <?php
+                                    while ($rowStatus = mysqli_fetch_assoc($queryStatus)) {
+                                        $statusVal = $rowStatus['status'];
+                                        $selected = ($statusVal == $selectedStatus) ? 'selected' : '';
+                                        echo "<option value='" . htmlspecialchars($statusVal) . "' $selected>" . htmlspecialchars($statusVal) . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
+                        <a class="btn btn-secondary" href="EmployeeMyclaim.php"
+                            style="text-decoration: none; margin-top: auto;">Reset</a>
                     </form>
 
                     <div class="table-responsive">
@@ -100,6 +152,7 @@ $claims = mysqli_query($dbconn, $sql_claims) or die("Error: " . mysqli_error($db
                             </tbody>
                         </table>
                     </div>
+                    <?php show_pagination($page, $totalPages, $search, 'statusFilter', $selectedStatus); ?>
                 </div>
 
             </div>

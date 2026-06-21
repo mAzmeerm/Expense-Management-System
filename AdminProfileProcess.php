@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     } else {
         set_alert('error', 'Error updating profile: ' . mysqli_error($dbconn), 'AdminProfile.php');
     }
+
+    
 } else {
     header("Location: AdminProfile.php");
     exit();

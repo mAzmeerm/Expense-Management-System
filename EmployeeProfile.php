@@ -53,29 +53,31 @@ if ($row = mysqli_fetch_assoc($query)) {
                             style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3>My Profile</h3>
                         </div>
-
+                        <form method="post" action="EmployeeProfileProcess.php">
                             <label for="name">Name:</label>
                             <input type="text" id="name" name="name"
-                                value="<?php echo htmlspecialchars($employeeName); ?>" disabled>
+                                value="<?php echo htmlspecialchars($employeeName); ?>">
 
                             <label for="phone">Phone Number:</label>
                             <input type="text" id="phone" name="phone"
-                                value="<?php echo htmlspecialchars($employeePhone); ?>" disabled>
+                                value="<?php echo htmlspecialchars($employeePhone); ?>">
 
                             <label>Email:</label>
-                            <input type="email" value="<?php echo htmlspecialchars($employeeEmail); ?>" disabled
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($employeeEmail); ?>" disabled
                                 style="background:#f4f4f4;">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password"
+                                placeholder="Leave blank to keep current password">
 
                             <label>Department:</label>
-                            <input type="text" value="<?php echo htmlspecialchars($employeeDept); ?>" disabled
+                            <input type="text" id="department" name="department" value="<?php echo htmlspecialchars($employeeDept); ?>" disabled
                                 style="background:#f4f4f4;">
 
                             <label>Role:</label>
-                            <input type="text" value="<?php echo htmlspecialchars($employeeRole); ?>" disabled
+                            <input type="text" id="role" name="role" value="<?php echo htmlspecialchars($employeeRole); ?>" disabled
                                 style="background:#f4f4f4;">
-
-                           
-                        
+                            <button name="update" class="btn btn-primary" type="submit" style="margin-top: 15px;">Save Changes</button>
+                        </form>
                     </div>
                 </div>
             </div>

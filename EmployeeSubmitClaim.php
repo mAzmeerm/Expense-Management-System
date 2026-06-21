@@ -34,7 +34,6 @@ if (isset($_POST['submit_claim'])) {
 $sqlCategories = "SELECT * FROM expensecategory ORDER BY CategoryName ASC";
 $categories = mysqli_query($dbconn, $sqlCategories) or die("Error: " . mysqli_error($dbconn));
 ?>
-<!DOCTYPE html>
 <html>
 
 <head>
