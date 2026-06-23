@@ -86,18 +86,18 @@ function show_pagination($page, $totalPages, $search = '', $filterKey = '', $fil
 
     echo '<div class="pagination">';
 
-    // 1. Previous Button
+    //Previous Button
     if ($page > 1) {
         echo "<a href='?page=" . ($page - 1) . $urlParams . "' class='btn-page'>&laquo; Prev</a>";
     }
 
-    // 2. Number Buttons
+    //Number Buttons
     for ($i = 1; $i <= $totalPages; $i++) {
         $active = ($page == $i) ? 'active' : '';
         echo "<a href='?page=$i" . $urlParams . "' class='btn-page $active'>$i</a>";
     }
 
-    // 3. Next Button
+    //Next Button
     if ($page < $totalPages) {
         echo "<a href='?page=" . ($page + 1) . $urlParams . "' class='btn-page'>Next &raquo;</a>";
     }

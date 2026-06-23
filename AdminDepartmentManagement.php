@@ -12,10 +12,9 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-// 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 
-// 3. Fetch all matching departments
+//Fetch all matching departments
 $sqlDepartment = "SELECT *
                   FROM department 
                   WHERE DepartmentName LIKE '%$search%' 

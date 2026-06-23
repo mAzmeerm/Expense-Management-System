@@ -4,14 +4,10 @@ include("dbconn.php");
 include("function.php");
 require_login();
 $loggedInUser = $_SESSION['UserID'];
-
-// Query to look up this specific employee
 $sql = "SELECT Name, Role FROM employee WHERE EmployeeID = '$loggedInUser'";
 $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
 
-// Fetch the data record
 if ($row = mysqli_fetch_assoc($query)) {
-    // Redirect admins away from the employee view
     if ($row['Role'] === 'Admin') {
         header("Location: AdminDashboard.php");
         exit();

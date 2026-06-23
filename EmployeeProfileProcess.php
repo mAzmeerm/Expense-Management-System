@@ -6,7 +6,6 @@ require_login();
 $loggedInUser = $_SESSION['UserID'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    // Only escape and grab fields the user is actually allowed to edit
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $phone = mysqli_real_escape_string($dbconn, $_POST['phone']);
     $password = $_POST['password'];

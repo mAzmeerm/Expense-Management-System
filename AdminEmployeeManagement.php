@@ -125,6 +125,7 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                         <th>Email</th>
                                         <th>Phone Number</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -138,14 +139,28 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                             <td><?= htmlspecialchars($employee['PhoneNum']) ?></td>
                                             <td><?= htmlspecialchars($employee['Role']) ?></td>
                                             <td>
+                                                <span class="badge badge-<?= trim(strtolower($employee['Status'])) ?>">
+                                                    <?= htmlspecialchars($employee['Status']) ?>
+                                                </span>
+                                            </td>
+                                            <td>
                                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                                    <?php if ($employee['Status'] == 'Active'): ?>
+                                                        <a href="AdminEmployeeProcess.php?action=deactivate&id=<?= $employee['EmployeeID'] ?>"
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Are you sure you want to deactivate this employee?');">
+                                                            Deactivate
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="AdminEmployeeProcess.php?action=activate&id=<?= $employee['EmployeeID'] ?>"
+                                                            class="btn btn-success"
+                                                            onclick="return confirm('Do you want to restore this employee back to Active status?');">
+                                                            Restore
+                                                        </a>
+                                                    <?php endif; ?>
+
                                                     <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
                                                         class="btn btn-secondary" style="text-decoration: none;">Edit</a>
-                                                    <a href="AdminEmployeeProcess.php?action=delete&EmployeeID=<?= $employee['EmployeeID'] ?>"
-                                                        class="btn btn-danger" style="text-decoration: none;"
-                                                        onclick="return confirm('Are you sure you want to delete this employee?');">
-                                                        Delete
-                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>

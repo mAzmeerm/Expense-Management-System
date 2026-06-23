@@ -6,7 +6,6 @@ require_login();
 
 $loggedInUser = $_SESSION['UserID'];
 
-// 1. Handle the form submission
 if (isset($_POST['submit_claim'])) {
 
     // Grab exact inputs directly from the form
@@ -16,13 +15,13 @@ if (isset($_POST['submit_claim'])) {
     $categoryID = $_POST['Category'];
     $status = 'Pending';
 
-    // 2. Insert into the database
+    //Insert into the database
     $sql = "INSERT INTO expenseclaim (EmployeeID, CategoryID, Description, Amount, ClaimDate, Status) 
             VALUES ('$loggedInUser', '$categoryID', '$description', '$amount', '$date', '$status')";
 
     $query = mysqli_query($dbconn, $sql);
 
-    // 3. Check if it worked and show alert
+    //Check if it worked and show alert
     if ($query) {
         set_alert('success', 'Your claim has been submitted successfully.', 'EmployeeSubmitClaim.php');
     } else {
@@ -30,7 +29,7 @@ if (isset($_POST['submit_claim'])) {
     }
 }
 
-// 4. Fetch categories for the dropdown menu
+//Fetch categories for the dropdown menu
 $sqlCategories = "SELECT * FROM expensecategory ORDER BY CategoryName ASC";
 $categories = mysqli_query($dbconn, $sqlCategories) or die("Error: " . mysqli_error($dbconn));
 ?>

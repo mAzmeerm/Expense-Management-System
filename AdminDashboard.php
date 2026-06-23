@@ -127,8 +127,6 @@ $recent = mysqli_query($dbconn, "SELECT c.*, e.Name, cat.CategoryName, d.Departm
                                     $row = $chart_rows[$i];
                                     // Calculate height percentage
                                     $height_percentage = ($row['total'] / $max) * 100;
-
-                                    // Standard if-else 
                                     if ($height_percentage < 4) {
                                         $h = 4;
                                     } else {

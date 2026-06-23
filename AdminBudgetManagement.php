@@ -12,9 +12,6 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-
-// 2. Process search keywords securely 
-// FIX: Unified name casing to match the HTML select tag precisely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 $selectedYear = isset($_GET['yearFilter']) ? mysqli_real_escape_string($dbconn, $_GET['yearFilter']) : '';
 
@@ -23,7 +20,6 @@ $limit = 10;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// FIX: Grouped search terms with () and updated filter to check b.Year
 $sqlCount = "SELECT COUNT(*) as total FROM budget b
              JOIN department d ON b.DepartmentID = d.DepartmentID
              WHERE (d.DepartmentName LIKE '%$search%'
@@ -38,7 +34,6 @@ $countRow = mysqli_fetch_assoc($countResult);
 $totalPages = ceil($countRow['total'] / $limit);
 
 // FETCH MATCHING BUDGETS
-// FIX: Grouped search conditions with () to prevent logic gates breaking
 $sqlBudget = "SELECT b.*, d.DepartmentName
               FROM budget b
               JOIN department d ON b.DepartmentID = d.DepartmentID
@@ -54,7 +49,6 @@ $sqlBudget .= " ORDER BY b.BudgetID DESC LIMIT $offset, $limit";
 $budgets = mysqli_query($dbconn, $sqlBudget) or die("Query Error: " . mysqli_error($dbconn));
 
 // FETCH DISTINCT YEARS FOR DROPDOWN
-// FIX: Variable re-use safety check altered to prevent overwriting main data strings
 $sqlYearOpt = "SELECT DISTINCT Year FROM budget ORDER BY Year ASC";
 $queryYear = mysqli_query($dbconn, $sqlYearOpt) or die("Error fetch Year: " . mysqli_error($dbconn));
 ?>

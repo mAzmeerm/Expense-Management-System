@@ -448,6 +448,14 @@ th {
   background: #fee2e2;
   color: #991b1b;
 }
+.badge-active {
+  background: #dcfce7 ;
+  color: #166534 ;
+}
+.badge-inactive {
+  background: #fee2e2;
+  color: #991b1b ;
+}
 /*icon styles */
 .menu-item-wrapper {
   display: inline-flex;

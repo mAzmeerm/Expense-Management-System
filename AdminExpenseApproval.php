@@ -15,8 +15,6 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-
-// 2. Process search keywords and status filter securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 $selectedStatus = isset($_GET['statusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['statusFilter']) : '';
 
@@ -42,7 +40,7 @@ $countResult = mysqli_query($dbconn, $sqlCount);
 $countRow = mysqli_fetch_assoc($countResult);
 $totalPages = ceil($countRow['total'] / $limit);
 
-// 3. Build SQL query merging both Search keywords AND Status Filter conditions
+//SQL query merging both Search keywords AND Status Filter conditions
 $sqlClaims = "SELECT c.*, e.Name, cat.CategoryName, d.DepartmentName
               FROM expenseclaim c 
               JOIN employee e ON c.EmployeeID = e.EmployeeID 

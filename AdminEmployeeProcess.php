@@ -17,13 +17,39 @@ $isEditMode = false;
 $titlePage = "Add Employee";
 $employee = [];
 $employeeID = "";
-
-// --- DETERMINING THE MODE AND EMPLOYEE ID ACCURATELY ---
-// Look for EmployeeID from either GET (clicking edit) or POST (submitting form)
 if (isset($_GET['EmployeeID'])) {
     $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
 } elseif (isset($_POST['EmployeeID'])) {
     $employeeID = mysqli_real_escape_string($dbconn, $_POST['EmployeeID']);
+}
+
+//deactive / restore
+if (isset($_GET['action']) && ($_GET['action'] === 'deactivate' || $_GET['action'] === 'activate')) {
+    $action = $_GET['action'];
+    $employeeID = isset($_GET['id']) ? mysqli_real_escape_string($dbconn, $_GET['id']) : '';
+    
+    if (!empty($employeeID)) {
+        $sql = ""; 
+
+        if ($action === 'deactivate') {
+            $sql = "UPDATE employee SET Status = 'Inactive' WHERE EmployeeID = '$employeeID'";
+            $_SESSION['alert_message'] = "Employee has been successfully deactivated.";
+            $_SESSION['alert_type'] = "warning";
+            
+        } elseif ($action === 'activate') {
+            $sql = "UPDATE employee SET Status = 'Active' WHERE EmployeeID = '$employeeID'";
+            $_SESSION['alert_message'] = "Employee profile has been successfully restored to Active status.";
+            $_SESSION['alert_type'] = "success";
+        }
+
+        // FIX 3: Executing the unified, populated $sql string variable directly
+        if (!empty($sql)) {
+            mysqli_query($dbconn, $sql) or die("Error changing profile status: " . mysqli_error($dbconn));
+        }
+        
+        header("Location: AdminEmployeeManagement.php");
+        exit();
+    }
 }
 
 // Set Edit Mode condition if action is update OR if we have a valid ID during a form submission
@@ -48,7 +74,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['Emplo
     }
 }
 
-// --- FORM PROCESSING ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = mysqli_real_escape_string($dbconn, $_POST['name']);
     $email = mysqli_real_escape_string($dbconn, $_POST['email']);
@@ -61,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkResultUpdate = mysqli_query($dbconn, $sqlCheckUpdate);
 
         if (mysqli_num_rows($checkResultUpdate) > 0) {
-            // FIX: Match parameter layout key structures perfectly for redirect states
             set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;">Email already exists!</span>', 'AdminEmployeeProcess.php?action=update&EmployeeID=' . $employeeID);
         } else {
             $sqlUpdate = "UPDATE employee 

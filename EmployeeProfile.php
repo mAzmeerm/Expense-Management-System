@@ -4,14 +4,13 @@ include("dbconn.php");
 include("function.php");
 require_login();
 $loggedInUser = $_SESSION['UserID'];
-// 
 $sql = "SELECT e.*, d.DepartmentName 
         FROM employee e 
         JOIN department d ON e.DepartmentID = d.DepartmentID 
         WHERE e.EmployeeID = '$loggedInUser'";
 $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
 
-// Fetch the data record
+
 if ($row = mysqli_fetch_assoc($query)) {
     // Redirect admins away from the employee view
     if ($row['Role'] === 'Admin') {

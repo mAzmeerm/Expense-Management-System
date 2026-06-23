@@ -11,9 +11,8 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 } else {
     $adminName = "Admin";
 }
-// 2. Process search keywords securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
-// 3. Fetch all matching Category
+//Fetch all matching Category
 $sqlCategory = "SELECT * 
                 FROM expensecategory 
                 WHERE CategoryName 

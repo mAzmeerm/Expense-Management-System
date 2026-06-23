@@ -5,29 +5,24 @@ include("function.php");
 require_login();
 $loggedInUser = $_SESSION['UserID'];
 
-// Query to look up this specific employee
 $sql = "SELECT Name FROM employee WHERE EmployeeID = '$loggedInUser'";
 $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
 
-// Fetch the data record
+
 if ($row = mysqli_fetch_assoc($query)) {
     $employeeName = $row['Name'];
 } else {
     $employeeName = "Employee";
 }
 
-// 2. Process search keywords and filters securely
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 $selectedStatus = isset($_GET['statusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['statusFilter']) : '';
 
-// PAGINATION SETUP
+// PAGINATION 
 $limit = 10;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 if ($page < 1) $page = 1; // Prevent negative page numbers
 $offset = ($page - 1) * $limit;
-
-// FIX 1: Grouped OR conditions using parentheses so it strictly isolates by the loggedInUser
-// FIX 1: Update your Pagination Count query status terms
 $sqlCount = "SELECT COUNT(*) as total FROM expenseclaim c 
              JOIN expensecategory cat ON c.CategoryID = cat.CategoryID 
              WHERE c.EmployeeID = '$loggedInUser' 
@@ -44,7 +39,6 @@ $totalPages = ceil($totalRows / $limit);
 if ($totalPages < 1) $totalPages = 1;
 
 
-// FIX 2: Added 'c.Status AS Status, c.Status AS status' so both array key casings work perfectly!
 $sqlClaims = "SELECT c.ClaimID, c.Description, cat.CategoryName, c.Amount, c.Status AS Status, c.Status AS status, c.ClaimDate
               FROM expenseclaim c
               JOIN expensecategory cat ON c.CategoryID = cat.CategoryID
@@ -59,7 +53,6 @@ $sqlClaims .= " ORDER BY c.ClaimDate DESC LIMIT $offset, $limit";
 $claims = mysqli_query($dbconn, $sqlClaims) or die("Claims Fetch Error: " . mysqli_error($dbconn));
 
 
-// FIX 3: Update your dynamic dropdown selection to return both casings as well
 $sqlStatus = "SELECT DISTINCT Status AS Status, Status AS status FROM expenseclaim ORDER BY Status ASC";
 $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetch status: " . mysqli_error($dbconn));
 ?>
