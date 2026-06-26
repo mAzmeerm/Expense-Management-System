@@ -41,7 +41,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'deactivate' || $_GET['action
             // Execute query FIRST before setting the alert and redirecting
             mysqli_query($dbconn, $sql) or die("Error changing profile status: " . mysqli_error($dbconn));
 
-            set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px;"> Employee deactivated successfully.</span>', 'AdminEmployeeManagement.php');
+            set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px;"> Employee has been deactivated </span>', 'AdminEmployeeManagement.php');
         } elseif ($action === 'activate') {
             $sql = "UPDATE employee SET Status = 'Active' WHERE EmployeeID = '$employeeID'";
 
@@ -49,7 +49,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'deactivate' || $_GET['action
             mysqli_query($dbconn, $sql) or die("Error changing profile status: " . mysqli_error($dbconn));
 
             // FIX: Changed text to Activated and matched your styling fixes from earlier
-            set_alert('success', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px; "> Employee activated successfully.</span>', 'AdminEmployeeManagement.php');
+            set_alert('success', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px; "> Change employee status back to active successfully.</span>', 'AdminEmployeeManagement.php');
         }
     }
 }

@@ -177,6 +177,10 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetching statuses
                                             </td>
                                             <td>
                                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
+
+
+                                                    <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
+                                                        class="btn btn-secondary" style="text-decoration: none;">Edit</a>
                                                     <?php if ($employee['Status'] == 'Active'): ?>
                                                         <a href="AdminEmployeeProcess.php?action=deactivate&id=<?= $employee['EmployeeID'] ?>"
                                                             class="btn btn-danger"
@@ -190,9 +194,6 @@ $queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetching statuses
                                                             Restore
                                                         </a>
                                                     <?php endif; ?>
-
-                                                    <a href="AdminEmployeeProcess.php?action=update&EmployeeID=<?= $employee['EmployeeID'] ?>"
-                                                        class="btn btn-secondary" style="text-decoration: none;">Edit</a>
                                                 </div>
                                             </td>
                                         </tr>

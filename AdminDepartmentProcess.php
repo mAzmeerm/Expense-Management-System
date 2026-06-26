@@ -18,16 +18,34 @@ $isEditMode = false;
 $row = ['DepartmentName' => ''];
 
 //delete action
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    $DepartmentID = mysqli_real_escape_string($dbconn, $_GET['id']);
+if (isset($_GET['action']) && ($_GET['action'] === 'deactivate' || $_GET['action'] === 'activate')) {
+    $action = $_GET['action'];
+    $departmentID = isset($_GET['id']) ? mysqli_real_escape_string($dbconn, $_GET['id']) : '';
 
-    $sqlDelete = "DELETE FROM department WHERE DepartmentID = '$DepartmentID'";
-    if (mysqli_query($dbconn, $sqlDelete)) {
-        set_alert('error', '<span class="menu-item-wrapper"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Department deleted successfully.</span>', 'AdminDepartmentManagement.php');
-        exit();
-    } else {
-        set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting department: ' . mysqli_error($dbconn) . '</span>', 'AdminDepartmentManagement.php');
-        exit();
+    if (!empty($departmentID)) { // FIXED: Changed $employeeID to $departmentID
+        $sql = "";
+
+        if ($action === 'deactivate') {
+            $checkEmployeesSql = "SELECT EmployeeID FROM employee WHERE DepartmentID = '$departmentID' LIMIT 1";
+            $employeeResult = mysqli_query($dbconn, $checkEmployeesSql);
+
+            if ($employeeResult && mysqli_num_rows($employeeResult) > 0) {
+                set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 10px;"> This department cannot be discontinued while employees are assigned to it.</span>', 'AdminDepartmentManagement.php');
+                exit(); // FIXED: Added exit() to stop execution
+            }
+
+            $sql = "UPDATE department SET Status = 'Discontinued' WHERE DepartmentID = '$departmentID'";
+            mysqli_query($dbconn, $sql) or die("Error changing department status: " . mysqli_error($dbconn));
+
+            set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px;"> Department has been discontinued.</span>', 'AdminDepartmentManagement.php');
+            exit();
+        } elseif ($action === 'activate') {
+            $sql = "UPDATE department SET Status = 'In Use' WHERE DepartmentID = '$departmentID'";
+            mysqli_query($dbconn, $sql) or die("Error changing department status: " . mysqli_error($dbconn));
+
+            set_alert('success', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px;"> Department status changed back to \'In Use\' successfully.</span>', 'AdminDepartmentManagement.php');
+            exit();
+        }
     }
 }
 //edit action
@@ -59,13 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkResult = mysqli_query($dbconn, $sqlCheck);
 
         if (mysqli_num_rows($checkResult) > 0) {
-            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Category "' . htmlspecialchars($DepartmentName) . '" already exists!</span>', 'AdminDepartmentManagement.php');
-
+            set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Department "' . htmlspecialchars($DepartmentName) . '" already exists!</span>', 'AdminDepartmentProcess.php');
         } else {
             $sqlInsert = "INSERT INTO department (DepartmentName) VALUES ('$DepartmentName')";
             if (mysqli_query($dbconn, $sqlInsert)) {
                 set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Department added successfully.</span>', 'AdminDepartmentManagement.php');
-
             } else {
                 set_alert('error', 'Error adding department: ' . mysqli_error($dbconn), 'AdminDepartmentManagement.php');
             }

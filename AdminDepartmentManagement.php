@@ -55,7 +55,7 @@ $departments = mysqli_query($dbconn, $sqlDepartment) or die("Error processing de
                         <form class="searchbar" id="searchForm" method="get" onsubmit="event.preventDefault();">
                             <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
                                 <div style="flex: 2;">
-                                    <label style="margin-top: 0;">Search Department:</label>
+                                    <label style="margin-top: 0;">Search Department name:</label>
                                     <input type="text" id="tableSearch" name="search"
                                         placeholder="Search by department name" value="<?= htmlspecialchars($search) ?>"
                                         oninput="liveSearch()">
@@ -70,21 +70,43 @@ $departments = mysqli_query($dbconn, $sqlDepartment) or die("Error processing de
                                     <tr>
                                         <th>Department ID</th>
                                         <th>Department Name</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (mysqli_num_rows($departments) > 0) { 
+                                    <?php if (mysqli_num_rows($departments) > 0) {
                                         while ($row = mysqli_fetch_assoc($departments)) { ?>
                                             <tr>
                                                 <td><?php echo htmlspecialchars($row['DepartmentID']); ?></td>
                                                 <td><?php echo htmlspecialchars($row['DepartmentName']); ?></td>
                                                 <td>
-                                                    <a href="AdminDepartmentProcess.php?action=edit&id=<?php echo $row['DepartmentID']; ?>" class="btn btn-primary">Edit</a>
-                                                    <a href="AdminDepartmentProcess.php?action=delete&id=<?php echo $row['DepartmentID']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this department?');">Delete</a>
+                                                    <?php
+                        
+                                                    $badgeClass = (trim(strtolower($row['Status'])) === 'in use') ? 'active' : 'inactive';
+                                                    ?>
+                                                    <span class="badge badge-<?= $badgeClass ?>">
+                                                        <?= htmlspecialchars($row['Status']) ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="AdminDepartmentProcess.php?action=edit&id=<?php echo $row['DepartmentID']; ?>" class="btn btn-secondary">Edit</a>
+                                                    <?php if ($row['Status'] == 'In Use'): ?>
+                                                        <a href="AdminDepartmentProcess.php?action=deactivate&id=<?= $row['DepartmentID'] ?>"
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Are you sure you want to Discontinued the department?');">
+                                                            Discontinue
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="AdminDepartmentProcess.php?action=activate&id=<?= $row['DepartmentID'] ?>"
+                                                            class="btn btn-success"
+                                                            onclick="return confirm('Do you want to restore this department back?');">
+                                                            Restore
+                                                        </a>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
-                                        <?php } 
+                                        <?php }
                                     } else { ?>
                                         <tr>
                                             <td colspan="3" style="text-align:center;">No departments found.</td>
