@@ -27,28 +27,30 @@ if (isset($_GET['EmployeeID'])) {
 if (isset($_GET['action']) && ($_GET['action'] === 'deactivate' || $_GET['action'] === 'activate')) {
     $action = $_GET['action'];
     $employeeID = isset($_GET['id']) ? mysqli_real_escape_string($dbconn, $_GET['id']) : '';
-    
     if (!empty($employeeID)) {
-        $sql = ""; 
+        $sql = "";
 
         if ($action === 'deactivate') {
+            $checkRoleSql = "SELECT Role FROM employee WHERE EmployeeID = '$employeeID' AND Role = 'Admin'";
+            $roleResult = mysqli_query($dbconn, $checkRoleSql);
+            if ($roleResult && mysqli_num_rows($roleResult) > 0) {
+                set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 10px;"> Cannot deactivate an admin account!</span>', 'AdminEmployeeManagement.php');
+            }
             $sql = "UPDATE employee SET Status = 'Inactive' WHERE EmployeeID = '$employeeID'";
-            $_SESSION['alert_message'] = "Employee has been successfully deactivated.";
-            $_SESSION['alert_type'] = "warning";
-            
+
+            // Execute query FIRST before setting the alert and redirecting
+            mysqli_query($dbconn, $sql) or die("Error changing profile status: " . mysqli_error($dbconn));
+
+            set_alert('error', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px;"> Employee deactivated successfully.</span>', 'AdminEmployeeManagement.php');
         } elseif ($action === 'activate') {
             $sql = "UPDATE employee SET Status = 'Active' WHERE EmployeeID = '$employeeID'";
-            $_SESSION['alert_message'] = "Employee profile has been successfully restored to Active status.";
-            $_SESSION['alert_type'] = "success";
-        }
 
-        // FIX 3: Executing the unified, populated $sql string variable directly
-        if (!empty($sql)) {
+            // Execute query FIRST before setting the alert and redirecting
             mysqli_query($dbconn, $sql) or die("Error changing profile status: " . mysqli_error($dbconn));
+
+            // FIX: Changed text to Activated and matched your styling fixes from earlier
+            set_alert('success', '<span class="menu-item-wrapper" style="display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 10px; "> Employee activated successfully.</span>', 'AdminEmployeeManagement.php');
         }
-        
-        header("Location: AdminEmployeeManagement.php");
-        exit();
     }
 }
 
@@ -61,17 +63,6 @@ if ((isset($_GET['action']) && $_GET['action'] === 'update') || isset($_POST['Em
     $sqlFetch = "SELECT * FROM employee WHERE EmployeeID = '$employeeID'";
     $result = mysqli_query($dbconn, $sqlFetch) or die("Query Failed: " . mysqli_error($dbconn));
     $employee = mysqli_fetch_assoc($result);
-}
-
-/* employee delete */
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['EmployeeID'])) {
-    $employeeID = mysqli_real_escape_string($dbconn, $_GET['EmployeeID']);
-    $sqlDelete = "DELETE FROM employee WHERE EmployeeID = '$employeeID'";
-    if (mysqli_query($dbconn, $sqlDelete)) {
-        set_alert('error', '<span class="menu-item-wrapper"><img src="IconSuccessRed.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Employee deleted successfully.</span>', 'AdminEmployeeManagement.php');
-    } else {
-        set_alert('error', '<span class="menu-item-wrapper"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Error deleting employee: ' . mysqli_error($dbconn) . '</span>', 'AdminEmployeeManagement.php');
-    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

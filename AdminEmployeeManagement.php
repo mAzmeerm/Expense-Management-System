@@ -17,20 +17,26 @@ if ($row = mysqli_fetch_assoc($queryAdmin)) {
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbconn, $_GET['search']) : '';
 
 $selectedDepartment = isset($_GET['DepartmentFilter']) ? mysqli_real_escape_string($dbconn, $_GET['DepartmentFilter']) : '';
+$selectedStatus = isset($_GET['StatusFilter']) ? mysqli_real_escape_string($dbconn, $_GET['StatusFilter']) : '';
 
-//PAGINATION
+// PAGINATION
 $limit = 10;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
+// 1. COUNT QUERY
 $sqlCount = "SELECT COUNT(*) as total FROM employee e 
              JOIN department d ON e.DepartmentID = d.DepartmentID
              WHERE (e.Name LIKE '%$search%' 
                 OR e.Email LIKE '%$search%' 
+                OR e.Status LIKE '%$search%' 
                 OR d.DepartmentName LIKE '%$search%')";
 
 if ($selectedDepartment !== '') {
     $sqlCount .= " AND d.DepartmentName = '$selectedDepartment'";
+}
+if ($selectedStatus !== '') {
+    $sqlCount .= " AND e.Status = '$selectedStatus'";
 }
 
 $countResult = mysqli_query($dbconn, $sqlCount);
@@ -38,21 +44,31 @@ $countRow = mysqli_fetch_assoc($countResult);
 $totalPages = ceil($countRow['total'] / $limit);
 
 
+// 2. EMPLOYEES DATA QUERY
 $sqlEmployees = "SELECT e.*, d.DepartmentName
                  FROM employee e 
                  JOIN department d ON e.DepartmentID = d.DepartmentID
                  WHERE (e.Name LIKE '%$search%' 
                     OR e.Email LIKE '%$search%' 
+                    OR e.Status LIKE '%$search%' 
                     OR d.DepartmentName LIKE '%$search%')";
 
 if ($selectedDepartment !== '') {
     $sqlEmployees .= " AND d.DepartmentName = '$selectedDepartment'";
 }
+if ($selectedStatus !== '') {
+    $sqlEmployees .= " AND e.Status = '$selectedStatus'"; //  FIXED: Changed $sqlCount to $sqlEmployees
+}
 
 $sqlEmployees .= " ORDER BY d.DepartmentName DESC LIMIT $offset, $limit";
 $employees = mysqli_query($dbconn, $sqlEmployees) or die("Error processing employees query: " . mysqli_error($dbconn));
+
+
 $sqlDepartment = "SELECT DISTINCT DepartmentName FROM department ORDER BY DepartmentName ASC";
 $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching departments: " . mysqli_error($dbconn));
+
+$sqlStatus = "SELECT DISTINCT Status FROM employee ORDER BY employeeID ASC";
+$queryStatus = mysqli_query($dbconn, $sqlStatus) or die("Error fetching statuses: " . mysqli_error($dbconn));
 ?>
 
 <html>
@@ -88,19 +104,19 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                         </div>
 
                         <form class="searchbar" id="searchForm" method="get" action="AdminEmployeeManagement.php">
-                            <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end;">
+                            <div style="flex: 1; display: flex; gap: 15px; align-items: flex-end; width: 100%; box-sizing: border-box;">
 
                                 <div style="flex: 2;">
                                     <label style="margin-top: 0;">Search Employees:</label>
                                     <input type="text" id="tableSearch" name="search"
                                         placeholder="Search by name, email..." value="<?= htmlspecialchars($search) ?>"
-                                        oninput="liveSearch()">
+                                        oninput="liveSearch()" style="width: 100%; box-sizing: border-box;">
                                 </div>
 
                                 <div style="flex: 1;">
                                     <label style="margin-top: 0;">Filter by Department:</label>
                                     <select id="DepartmentFilter" name="DepartmentFilter"
-                                        onchange="this.form.submit();">
+                                        onchange="this.form.submit();" style="width: 100%; box-sizing: border-box;">
                                         <option value="">-- All Departments --</option>
                                         <?php
                                         while ($rowDepartment = mysqli_fetch_assoc($queryDepartment)) {
@@ -111,9 +127,25 @@ $queryDepartment = mysqli_query($dbconn, $sqlDepartment) or die("Error fetching 
                                         ?>
                                     </select>
                                 </div>
+
+                                <div style="flex: 1;">
+                                    <label style="margin-top: 0;">Filter by Status:</label>
+                                    <select id="StatusFilter" name="StatusFilter" onchange="this.form.submit();">
+                                        <option value="">-- All Statuses --</option>
+                                        <?php
+                                        while ($rowStatus = mysqli_fetch_assoc($queryStatus)) {
+                                            $StatusVal = $rowStatus['Status'];
+                                            $selected = ($StatusVal == $selectedStatus) ? 'selected' : '';
+                                            echo "<option value='" . htmlspecialchars($StatusVal) . "' $selected>" . htmlspecialchars($StatusVal) . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <a class="btn btn-secondary" href="AdminEmployeeManagement.php"
+                                    style="text-decoration: none; margin-top: auto; white-space: nowrap;">Reset</a>
+
                             </div>
-                            <a class="btn btn-secondary" href="AdminEmployeeManagement.php"
-                                style="text-decoration: none; margin-top: auto;">Reset</a>
                         </form>
                         <div class="table-responsive">
                             <table>
