@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $DepartmentName = mysqli_real_escape_string($dbconn, $_POST['DepartmentName']);
 
     if ($isEditMode) {
-        $sqlUpdate = "UPDATE department SET CategoryName = '$DepartmentName' WHERE CategoryID = '$DepartmentID'";
+        $sqlUpdate = "UPDATE department SET DepartmentName = '$DepartmentName' WHERE DepartmentID = '$DepartmentID'";
         if (mysqli_query($dbconn, $sqlUpdate)) {
             set_alert('success', '<span class="menu-item-wrapper"><img src="IconSuccess.svg" alt="Checkmark" width="20" height="20" style="margin-right: 5px;"> Department updated successfully.</span>', 'AdminDepartmentManagement.php');
         } else {

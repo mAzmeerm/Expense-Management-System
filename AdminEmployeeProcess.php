@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <label for="email">Email:</label>
                                 <input type="email" id="email" name="email" required>
-                                <label for="password">Password:</label>
+                                <label for="password">Enter temporary Password:</label>
                                 <input type="password" id="password" name="password" required>
                                 <label
                                     style="display: block; font-weight: normal; font-size: 14px; color: #334155; cursor: pointer; user-select: none;">
