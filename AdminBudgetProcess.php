@@ -113,7 +113,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['BudgetI
                             <select id="Department" name="DepartmentID" required style="margin-bottom: 15px;">
                                 <option value="">-- Select Department --</option>
                                 <?php
-                                $queryDept = mysqli_query($dbconn, "SELECT DepartmentID, DepartmentName FROM department");
+                                $queryDept = mysqli_query($dbconn, "SELECT DepartmentID, DepartmentName FROM department Where Status = 'In Use'");
                                 while ($rowDept = mysqli_fetch_assoc($queryDept)) {
                                     echo "<option value='" . $rowDept['DepartmentID'] . "'>" . $rowDept['DepartmentName'] . "</option>";
                                 }

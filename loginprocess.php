@@ -11,7 +11,7 @@ if (isset($_POST['login'])) {
     $query = mysqli_query($dbconn, $sql) or die("Error: " . mysqli_error($dbconn));
     $row = mysqli_fetch_assoc($query);
     if ($row['Status'] == "Inactive") {
-         set_alert('error', '<span class="menu-item-wrapper" style = "display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Your account was inactive , please contact admin to reactivate.</span>', 'login.php');
+         set_alert('error', '<span class="menu-item-wrapper" style = "display: inline-flex; align-items: center; width: 100%; box-sizing: border-box; white-space: normal;"><img src="IconError.svg" alt="Error" width="20" height="20" style="margin-right: 5px;"> Your account was inactive , please contact admin to reactivate it.</span>', 'login.php');
     }
 
     $loginOk = false;

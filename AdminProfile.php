@@ -76,7 +76,7 @@ if ($row2 = mysqli_fetch_assoc($query2)) {
                             <label for="department">Department: </label>
                             <select id="department" name="department">
                                 <?php
-                                $sqlDepartments = "SELECT * FROM department";
+                                $sqlDepartments = "SELECT * FROM department WHERE Status = 'In Use'";
                                 $queryDepartments = mysqli_query($dbconn, $sqlDepartments) or die("Error: " . mysqli_error($dbconn));
                                 while ($rowDept = mysqli_fetch_assoc($queryDepartments)) {
                                     $selected = ($rowDept['DepartmentID'] == $adminDepartmentID) ? 'selected' : '';

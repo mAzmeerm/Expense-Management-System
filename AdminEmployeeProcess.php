@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select id="department" name="department" required>
                                     <option value="">-- Select Department --</option>
                                     <?php
-                                    $sqlDepartments = "SELECT DepartmentID, DepartmentName FROM department";
+                                    $sqlDepartments = "SELECT DepartmentID, DepartmentName FROM department WHERE Status = 'In Use'";
                                     $queryDepartments = mysqli_query($dbconn, $sqlDepartments) or die("Error: " . mysqli_error($dbconn));
                                     while ($row = mysqli_fetch_assoc($queryDepartments)) {
                                         echo "<option value='" . $row['DepartmentID'] . "'>" . htmlspecialchars($row['DepartmentName']) . "</option>";
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="department">Department:</label>
                                 <select id="department" name="department" required>
                                     <?php
-                                    $sqlDepartments = "SELECT DepartmentID, DepartmentName FROM department";
+                                    $sqlDepartments = "SELECT DepartmentID, DepartmentName FROM department WHERE Status = 'In Use'";
                                     $queryDepartments = mysqli_query($dbconn, $sqlDepartments) or die("Error: " . mysqli_error($dbconn));
                                     while ($row = mysqli_fetch_assoc($queryDepartments)) {
                                         $selected = ($row['DepartmentID'] == $employee['DepartmentID']) ? "selected" : "";
