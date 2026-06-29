@@ -32,9 +32,9 @@ Your project folder is **`GroupProjectCSC264E`**, containing:
 - `function.php` — shared helper functions (login, alerts, password hashing, pagination)
 - `login.php` / `loginprocess.php` / `logout.php` — authentication
 - `style.css`, `script.js`, `logo.png`, and `Icon*.svg` — front-end assets
-- `database.sql` — **database schema** (created for this guide — see Step 5;
-  your original upload did not include a `.sql` file, so this was
-  reconstructed from the tables/columns referenced in your PHP code)
+- `database.sql` — your actual database export (5 tables, with real sample
+  data already in it: 11 employees, 6 departments, 4 categories, 6 budgets,
+  and 60 expense claims)
 
 ---
 
@@ -66,10 +66,9 @@ Your project folder is **`GroupProjectCSC264E`**, containing:
 ## 5. Create the Database
 
 Your code expects a database called **`expensemanagementdb`** (set in `dbconn.php`).
-No `.sql` file was included in your upload, so use the one generated for you,
-**`database.sql`**, which creates all 5 tables your code uses
-(`employee`, `department`, `expensecategory`, `budget`, `expenseclaim`)
-plus a working Admin login.
+Use the **`database.sql`** file you exported from your own phpMyAdmin — it
+already contains all 5 tables (`employee`, `department`, `expensecategory`,
+`budget`, `expenseclaim`) plus your real sample data.
 
 **Using phpMyAdmin (easiest):**
 
@@ -85,16 +84,26 @@ mysql -u root -p < database.sql
 ```
 (Press Enter with no password if you haven't set a MySQL root password.)
 
-This creates the database, all tables, and a default Admin login:
+Once imported, you can log in with any existing account from the `employee`
+table, for example:
 
-| Field | Value |
-|---|---|
-| Email | `admin@company.com` |
-| Password | `admin123` |
-| Role | Admin |
+| Email | Role | Status |
+|---|---|---|
+| `azmeer@sportzone.com` | Admin | Active |
+| `noorasyraf@sportzone.com` | Admin | Active |
 
-⚠️ **Change this password immediately after your first login** (via the Admin
-Profile page) since it's published in this guide.
+ **Six accounts still have plaintext passwords** in this export (`aiman123`,
+`faris123`, `hakimi123`, `daniel123`, `amirul123`, `iqbal123` — for
+`aimanhakim@sportzone.com`, `faris@sportzone.com`, `hakimi@sportzone.com`,
+`daniel@sportzone.com`, `amirul@sportzone.com`, and `iqbal@sportzone.com`
+respectively). Your code's `is_hashed()` check handles this automatically —
+the first successful login for each of these accounts will silently upgrade
+their password to a bcrypt hash. You don't need to do anything, but don't
+share this README with those exact passwords still in it once your project
+goes anywhere public (e.g. GitHub).
+
+ **`faris@sportzone.com` has `Status = 'Inactive'`** and won't be able to
+log in until an Admin reactivates the account (Admin → Employee Management).
 
 ---
 
@@ -160,10 +169,14 @@ different username/password, update `$user` / `$pass` here.
 
 ## 10. Notes on This Guide
 
-- `database.sql` was **reconstructed by inspecting the SQL queries inside your
-  PHP files** (table names, column names, and status values), since the
-  uploaded project did not contain a database export. Double-check it against
-  your own database if you already have one set up, and adjust column types
-  if your actual schema differs.
+- `database.sql` is your **actual phpMyAdmin export** — not reconstructed —
+  so it matches your real database exactly, including all current sample data.
+-  Every table in this export uses `CHARSET=eucjpms` (a Japanese-specific
+  text encoding), which is unusual for a project with no Japanese text and
+  was likely just phpMyAdmin's default charset setting at export time rather
+  than something chosen on purpose. It works fine for plain English/Malay
+  text, but if you ever see garbled characters, change each table's charset
+  to `utf8mb4` instead (phpMyAdmin: select table → **Operations** → Table
+  options → Collation).
 - This project does not use Composer, npm, or any framework — it's a classic
   procedural PHP app, so no `composer install` / `npm install` step is needed.
